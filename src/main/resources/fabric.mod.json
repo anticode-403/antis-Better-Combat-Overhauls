@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "abco",
+  "version": "${version}",
+  "name": "antis Better Combat Overhauls",
+  "description": "A number of overhauls to Better Combat's main mechanics, including heavy attacks!",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/abco/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "me.anticode.abco.client.BCOverhaulsClient"
+    ],
+    "main": [
+      "me.anticode.abco.BCOverhauls"
+    ]
+  },
+  "mixins": [
+    "abco.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
