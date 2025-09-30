@@ -6,7 +6,7 @@ If your mod uses default Better Combat weapon attributes, then it should support
 ```JSON5
 "versatile": true,
 "versatile_damage": 2.0,
-"versatile_attacks: [
+"versatile_attacks": [
 // ...
 ],
 "special_attacks": [
