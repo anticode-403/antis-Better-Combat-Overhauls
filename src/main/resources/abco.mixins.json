@@ -4,6 +4,9 @@
   "package": "me.anticode.abco.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "WeaponAttributesHelperMixin",
+    "WeaponAttributesMixin",
+    "WeaponRegistryMixin"
   ],
   "client": [
   ],
