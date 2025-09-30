@@ -13,6 +13,8 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
     @Unique
     private @Nullable Boolean versatile;
     @Unique
+    private double versatile_damage = 0;
+    @Unique
     private @Nullable WeaponAttributes.Attack[] heavy_attacks;
     @Unique
     private @Nullable WeaponAttributes.Attack[] versatile_attacks;
@@ -31,6 +33,21 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
     @Override
     public boolean antisBetterCombatOverhauls$hasVersatile() {
         return versatile != null;
+    }
+
+    @Override
+    public void antisBetterCombatOverhauls$setVersatileDamage(double damage) {
+        versatile_damage = damage;
+    }
+
+    @Override
+    public double antisBetterCombatOverhauls$getVersatileDamage() {
+        return versatile_damage;
+    }
+
+    @Override
+    public boolean antisBetterCombatOverhauls$hasVersatileDamage() {
+        return versatile_damage != 0;
     }
 
     @Override

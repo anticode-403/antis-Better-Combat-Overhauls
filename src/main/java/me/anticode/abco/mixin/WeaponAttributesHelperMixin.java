@@ -36,12 +36,17 @@ public abstract class WeaponAttributesHelperMixin {
         assert exo != null;
         // Versatile
         if (exb.antisBetterCombatOverhauls$hasVersatile()) {
-            BCOverhauls.LOGGER.debug("OVERRIDE MIXIN VERSATILE. B: " + exb.antisBetterCombatOverhauls$getVersatile());
             exo.antisBetterCombatOverhauls$setVersatile(exb.antisBetterCombatOverhauls$getVersatile());
         }
         else {
-            BCOverhauls.LOGGER.debug("OVERRIDE MIXIN NOT VERSATILE. A: " + exa.antisBetterCombatOverhauls$getVersatile());
             exo.antisBetterCombatOverhauls$setVersatile(exa.antisBetterCombatOverhauls$getVersatile());
+        }
+        // Versatile Damage
+        if (exb.antisBetterCombatOverhauls$hasVersatileDamage()) {
+            exo.antisBetterCombatOverhauls$setVersatileDamage(exb.antisBetterCombatOverhauls$getVersatileDamage());
+        }
+        else {
+            exo.antisBetterCombatOverhauls$setVersatileDamage(exa.antisBetterCombatOverhauls$getVersatileDamage());
         }
         // Versatile Attacks
         if (exb.antisBetterCombatOverhauls$hasVersatileAttacks() && exb.antisBetterCombatOverhauls$getVersatileAttacks().length > 0) {

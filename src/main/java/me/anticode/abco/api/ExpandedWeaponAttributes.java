@@ -9,6 +9,12 @@ public interface ExpandedWeaponAttributes {
 
     boolean antisBetterCombatOverhauls$hasVersatile();
 
+    double antisBetterCombatOverhauls$getVersatileDamage();
+
+    void antisBetterCombatOverhauls$setVersatileDamage(double versatile);
+
+    boolean antisBetterCombatOverhauls$hasVersatileDamage();
+
     void antisBetterCombatOverhauls$setVersatileAttacks(WeaponAttributes.Attack[] attacks);
 
     WeaponAttributes.Attack[] antisBetterCombatOverhauls$getVersatileAttacks();
