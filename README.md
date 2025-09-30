@@ -3,7 +3,7 @@ ABCO is a mod designed to add many features to Better Combat necessary to make i
 
 # Adding Support
 If your mod uses default Better Combat weapon attributes, then it should support ABCO out of the box! If not, there's a very simple list of attributes you can add to your weapon attributes:
-```JSON
+```JSON5
 "versatile": true,
 "versatile_damage": 2.0,
 "versatile_attacks: [
