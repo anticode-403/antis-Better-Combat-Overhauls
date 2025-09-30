@@ -25,7 +25,11 @@ public abstract class WeaponRegistryMixin {
 
     @Inject(method = "resolveAttributes", at = @At("RETURN"))
     private static void resolveAttributesMixin(Identifier itemId, AttributesContainer container, CallbackInfoReturnable<WeaponAttributes> cir) {
+        ExpandedWeaponAttributes expandedWeaponAttributes = (ExpandedWeaponAttributes)(Object)cir.getReturnValue();
         BCOverhauls.LOGGER.debug("ABCO GET ID: " + itemId.toString());
-        BCOverhauls.LOGGER.debug("ABCO GET VERSATILE: " + ((ExpandedWeaponAttributes)(Object)cir.getReturnValue()).antisBetterCombatOverhauls$getVersatile());
+        BCOverhauls.LOGGER.debug("ABCO GET VERSATILE: " + expandedWeaponAttributes.antisBetterCombatOverhauls$getVersatile());
+        if (expandedWeaponAttributes.antisBetterCombatOverhauls$getHeavyAttacks() != null) {
+            BCOverhauls.LOGGER.debug("ABCO GET VERSATILE ATTACKS: " + (expandedWeaponAttributes.antisBetterCombatOverhauls$getVersatileAttacks().length > 0));
+        }
     }
 }

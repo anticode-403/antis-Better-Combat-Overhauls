@@ -1,5 +1,6 @@
 package me.anticode.abco.api;
 
+import me.anticode.abco.BCOverhauls;
 import net.bettercombat.api.AttributesContainer;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,6 +14,7 @@ public class FakeAttributesContainer {
     }
 
     public AttributesContainer convert() {
+        BCOverhauls.LOGGER.debug("Converting FakeAttributesContainer. Parent: " + parent);
         return new AttributesContainer(parent, attributes != null ? attributes.convert() : null);
     }
 }
