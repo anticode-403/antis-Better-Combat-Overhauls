@@ -68,7 +68,7 @@ public abstract class WeaponAttributesHelperMixin {
         cir.setReturnValue(attributesContainer);
     }
 
-    @Inject(method = "decode(Ljava/io/Reader;)Lnet/bettercombat/api/AttributesContainer;", at = @At("RETURN"))
+    @Inject(method = "decode(Ljava/io/Reader;)Lnet/bettercombat/api/AttributesContainer;", at = @At("HEAD"), cancellable = true)
     private static void attributesContainerTest(Reader reader, CallbackInfoReturnable<AttributesContainer> cir) {
         Gson gson = new Gson();
         FakeAttributesContainer decoy = gson.fromJson(reader, fakeAttributesContainerFormat);
