@@ -10,7 +10,7 @@ public abstract class AttackMixin implements ExpandedAttack {
     @Unique
     private boolean critical = false;
     @Unique
-    private double kbMultiplier = 0D;
+    private int knockback = 0;
 
     public void antisBetterCombatOverhauls$setCritical(boolean value) {
         critical = value;
@@ -19,10 +19,10 @@ public abstract class AttackMixin implements ExpandedAttack {
         return critical;
     }
 
-    public void antisBetterCombatOverhauls$setKnockbackMultiplier(double value) {
-        kbMultiplier = value;
+    public void antisBetterCombatOverhauls$setKnockback(int value) {
+        knockback = value;
     }
-    public double antisBetterCombatOverhauls$getKnockbackMultiplier() {
-        return kbMultiplier;
+    public int antisBetterCombatOverhauls$getKnockback() {
+        return knockback;
     }
 }

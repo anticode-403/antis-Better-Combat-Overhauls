@@ -33,4 +33,12 @@ public class PlayerEntityMixin {
         ExpandedAttack expandedAttack = (ExpandedAttack)(Object)player_bc.getCurrentAttack().attack();
         return expandedAttack.antisBetterCombatOverhauls$getCritical();
     }
+
+    @ModifyVariable(method = "attack", at = @At("STORE"), ordinal = 0)
+    private int injectNewKBAttribute(int value) {
+        PlayerEntity player = (PlayerEntity)(Object)this;
+        EntityPlayer_BetterCombat player_bc = (EntityPlayer_BetterCombat)player;
+        ExpandedAttack expandedAttack = (ExpandedAttack)(Object)player_bc.getCurrentAttack().attack();
+        return value + expandedAttack.antisBetterCombatOverhauls$getKnockback();
+    }
 }

@@ -4,6 +4,6 @@ public interface ExpandedAttack {
     public void antisBetterCombatOverhauls$setCritical(boolean value);
     public boolean antisBetterCombatOverhauls$getCritical();
 
-    public void antisBetterCombatOverhauls$setKnockbackMultiplier(double value);
-    public double antisBetterCombatOverhauls$getKnockbackMultiplier();
+    public void antisBetterCombatOverhauls$setKnockback(int value);
+    public int antisBetterCombatOverhauls$getKnockback();
 }

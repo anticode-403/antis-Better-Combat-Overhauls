@@ -6,8 +6,8 @@ If your mod uses default Better Combat weapon attributes, then it should support
 
 If not, there's a very simple list of attributes you can add to your weapon attributes:
 ```JSON5
-"versatile": true,
-"versatile_damage": 2.0,
+"versatile": false,
+"versatile_damage": 0.0,
 "versatile_attacks": [
 // ...
 ],
@@ -20,7 +20,7 @@ If versatile is true, your weapon attributes MUST define a valid versatile_attac
 Additionally, ABCO adds new Attack attributes:
 ```JSON5
 "critical": false,
-"knockback_multiplier": 1
+"knockback": 0
 ```
 These new attributes are mostly self-explanatory but should be powerful tools for creating unique and interesting attack combos, as well as an engaging gameplay loop. In ABCO's default datapack, most attack combos end in a critical hit.
 

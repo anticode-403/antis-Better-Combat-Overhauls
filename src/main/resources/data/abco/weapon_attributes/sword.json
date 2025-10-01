@@ -27,7 +27,7 @@
         "hitbox": "FORWARD_BOX",
         "damage_multiplier": 1,
         "critical": true,
-        "knockback_multiplier": 3,
+        "knockback": 1,
         "angle": 0,
         "upswing": 0.5,
         "animation": "bettercombat:one_handed_stab",
@@ -38,7 +38,7 @@
       }
     ],
     "versatile": true,
-    "versatile_damage": 2.0,
+    "versatile_damage": 1.0,
     "versatile_attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",
@@ -64,7 +64,7 @@
         "hitbox": "FORWARD_BOX",
         "damage_multiplier": 1,
         "critical": true,
-        "knockback_multiplier": 3,
+        "knockback": 1,
         "angle": 0,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_stab_left",
@@ -78,7 +78,7 @@
         "hitbox": "VERTICAL_PLANE",
         "damage_multiplier": 1.2,
         "critical": true,
-        "knockback_multiplier": 5,
+        "knockback": 2,
         "angle": 150,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slam",
