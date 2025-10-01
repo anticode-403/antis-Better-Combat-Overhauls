@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonReader;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.anticode.abco.BCOverhauls;
+import me.anticode.abco.api.ExpandedAttack;
 import me.anticode.abco.api.ExpandedWeaponAttributes;
 import me.anticode.abco.api.FakeAttributesContainer;
 import net.bettercombat.api.AttributesContainer;
@@ -15,6 +16,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.io.Reader;
@@ -63,6 +66,17 @@ public abstract class WeaponAttributesHelperMixin {
         else {
             exo.antisBetterCombatOverhauls$setHeavyAttacks(exa.antisBetterCombatOverhauls$getHeavyAttacks());
         }
+        return original;
+    }
+
+    @ModifyVariable(method = "override", at = @At("STORE"), ordinal = 2)
+    private static WeaponAttributes.Attack redirectAttackOverride(WeaponAttributes.Attack original, @Local(ordinal = 1)WeaponAttributes.Attack override) {
+        ExpandedAttack exOverride = (ExpandedAttack)(Object)override;
+        ExpandedAttack exOriginal = (ExpandedAttack)(Object)original;
+        assert exOverride != null;
+        assert exOriginal != null;
+        exOriginal.antisBetterCombatOverhauls$setKnockback(exOverride.antisBetterCombatOverhauls$getKnockback());
+        exOriginal.antisBetterCombatOverhauls$setCritical(exOverride.antisBetterCombatOverhauls$getCritical());
         return original;
     }
 
