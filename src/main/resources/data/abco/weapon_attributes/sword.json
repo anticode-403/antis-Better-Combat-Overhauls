@@ -26,6 +26,8 @@
       {
         "hitbox": "FORWARD_BOX",
         "damage_multiplier": 1,
+        "critical": true,
+        "knockback_multiplier": 3,
         "angle": 0,
         "upswing": 0.5,
         "animation": "bettercombat:one_handed_stab",
@@ -61,6 +63,8 @@
       {
         "hitbox": "FORWARD_BOX",
         "damage_multiplier": 1,
+        "critical": true,
+        "knockback_multiplier": 3,
         "angle": 0,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_stab_left",
@@ -73,6 +77,8 @@
       {
         "hitbox": "VERTICAL_PLANE",
         "damage_multiplier": 1.2,
+        "critical": true,
+        "knockback_multiplier": 5,
         "angle": 150,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slam",

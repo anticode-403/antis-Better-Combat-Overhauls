@@ -17,17 +17,17 @@ public final class FakeWeaponAttributes {
     @SerializedName("category")
     private final @Nullable String category;
     @SerializedName("attacks")
-    private final WeaponAttributes.Attack[] attacks;
+    private final FakeAttack[] attacks;
     @SerializedName("versatile")
     private final @Nullable Boolean versatile;
     @SerializedName("versatile_damage")
     private final double versatile_damage;
     @SerializedName("versatile_attacks")
-    private final WeaponAttributes.Attack[] versatile_attacks;
+    private final FakeAttack[] versatile_attacks;
     @SerializedName("special_attacks")
-    private final WeaponAttributes.Attack[] special_attacks;
+    private final FakeAttack[] special_attacks;
 
-    public FakeWeaponAttributes(double attack_range, @Nullable String pose, @Nullable String off_hand_pose, Boolean isTwoHanded, String category, WeaponAttributes.Attack[] attacks, @Nullable Boolean versatile, double versatile_damage, @Nullable WeaponAttributes.Attack[] versatile_attacks, @Nullable WeaponAttributes.Attack[] special_attacks) {
+    public FakeWeaponAttributes(double attack_range, @Nullable String pose, @Nullable String off_hand_pose, Boolean isTwoHanded, String category, FakeAttack[] attacks, @Nullable Boolean versatile, double versatile_damage, @Nullable FakeAttack[] versatile_attacks, @Nullable FakeAttack[] special_attacks) {
         this.attack_range = attack_range;
         this.pose = pose;
         this.off_hand_pose = off_hand_pose;
@@ -41,7 +41,7 @@ public final class FakeWeaponAttributes {
     }
 
     public WeaponAttributes convert() {
-        WeaponAttributes attributes = new WeaponAttributes(attack_range, pose, off_hand_pose, two_handed, category, attacks);
+        WeaponAttributes attributes = new WeaponAttributes(attack_range, pose, off_hand_pose, two_handed, category, convertAttacks(attacks));
         ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
         BCOverhauls.LOGGER.debug("category: " + category);
         if (versatile != null) {
@@ -53,11 +53,20 @@ public final class FakeWeaponAttributes {
         if (versatile_attacks != null) {
             BCOverhauls.LOGGER.debug("versatile_attacks: " + versatile_attacks.length);
         }
-        expandedAttributes.antisBetterCombatOverhauls$setVersatileAttacks(versatile_attacks);
+        expandedAttributes.antisBetterCombatOverhauls$setVersatileAttacks(convertAttacks(versatile_attacks));
         if (special_attacks != null) {
             BCOverhauls.LOGGER.debug("special_attacks: " + special_attacks.length);
         }
-        expandedAttributes.antisBetterCombatOverhauls$setHeavyAttacks(special_attacks);
+        expandedAttributes.antisBetterCombatOverhauls$setHeavyAttacks(convertAttacks(special_attacks));
         return attributes;
+    }
+
+    private WeaponAttributes.Attack[] convertAttacks(FakeAttack[] fakeAttacks) {
+        if (fakeAttacks == null) return null;
+        WeaponAttributes.Attack[] attacks = new WeaponAttributes.Attack[fakeAttacks.length];
+        for (int i = 0; i < fakeAttacks.length; i++) {
+            attacks[i] = fakeAttacks[i].convert();
+        }
+        return attacks;
     }
 }
