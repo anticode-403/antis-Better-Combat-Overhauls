@@ -15,21 +15,28 @@ If your mod uses default Better Combat weapon attributes, then it should support
 
 If not, there's a very simple list of attributes you can add to your weapon attributes:
 ```JSON5
-"versatile": false,
-"versatile_damage": 0.0,
-"versatile_attacks": [
-// ...
-],
-"special_attacks": [
-// ...
-]
+{
+  "attributes": {
+    "critical_multiplier": 1.5,
+    "versatile": false,
+    "versatile_damage": 0.0,
+    "versatile_attacks": [
+      // ...
+    ],
+    "special_attacks": [
+      // ...
+    ]
+  },
+}
 ```
 If versatile is true, your weapon attributes MUST define a valid versatile_attacks. Versatile is a weapon attribute that gives your weapon two different attack attributes based on whether or not you are two-handing your weapon. Versatile damage is _additional_ damage while using versatile and will be shown on the item tooltip.
 
 Additionally, ABCO adds new Attack attributes:
 ```JSON5
-"critical": false,
-"knockback": 0
+{
+  "critical": false,
+  "knockback": 0
+}
 ```
 These new attributes are mostly self-explanatory but should be powerful tools for creating unique and interesting attack combos, as well as an engaging gameplay loop. In ABCO's default datapack, most attack combos end in a critical hit.
 
