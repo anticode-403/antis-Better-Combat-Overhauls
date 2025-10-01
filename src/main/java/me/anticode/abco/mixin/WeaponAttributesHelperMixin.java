@@ -25,10 +25,6 @@ import java.lang.reflect.Type;
 
 @Mixin(value = WeaponAttributesHelper.class, remap = false)
 public abstract class WeaponAttributesHelperMixin {
-    @Unique
-    private final static Type fakeAttributesContainerFormat = (new TypeToken<FakeAttributesContainer>() {
-    }).getType();
-
     @ModifyReturnValue(method = "override", at = @At("TAIL"))
     private static WeaponAttributes addExpandedWeaponAttributes(WeaponAttributes original, @Local(argsOnly = true, ordinal = 0) WeaponAttributes a, @Local(argsOnly = true, ordinal = 1) WeaponAttributes b) {
 
@@ -85,21 +81,5 @@ public abstract class WeaponAttributesHelperMixin {
         exOriginal.antisBetterCombatOverhauls$setKnockback(exOverride.antisBetterCombatOverhauls$getKnockback());
         exOriginal.antisBetterCombatOverhauls$setCritical(exOverride.antisBetterCombatOverhauls$getCritical());
         return original;
-    }
-
-    @Inject(method = "decode(Lcom/google/gson/stream/JsonReader;)Lnet/bettercombat/api/AttributesContainer;", at = @At("HEAD"), cancellable = true)
-    private static void attributesContainerTest(JsonReader json, CallbackInfoReturnable<AttributesContainer> cir) {
-        Gson gson = new Gson();
-        FakeAttributesContainer decoy = gson.fromJson(json, fakeAttributesContainerFormat);
-        AttributesContainer attributesContainer = decoy.convert();
-        cir.setReturnValue(attributesContainer);
-    }
-
-    @Inject(method = "decode(Ljava/io/Reader;)Lnet/bettercombat/api/AttributesContainer;", at = @At("HEAD"), cancellable = true)
-    private static void attributesContainerTest(Reader reader, CallbackInfoReturnable<AttributesContainer> cir) {
-        Gson gson = new Gson();
-        FakeAttributesContainer decoy = gson.fromJson(reader, fakeAttributesContainerFormat);
-        AttributesContainer attributesContainer = decoy.convert();
-        cir.setReturnValue(attributesContainer);
     }
 }

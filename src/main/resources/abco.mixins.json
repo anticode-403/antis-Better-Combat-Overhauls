@@ -9,8 +9,7 @@
     "PlayerEntityMixin",
     "WeaponAttributesHelperMixin",
     "WeaponAttributesMixin",
-    "WeaponAttributeTooltipMixin",
-    "WeaponRegistryMixin"
+    "WeaponAttributeTooltipMixin"
   ],
   "client": [
   ],
