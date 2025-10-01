@@ -6,11 +6,12 @@ import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(value = PlayerAttackHelper.class, remap = false)
-public class PlayerAttackHelperMixin {
+public abstract class PlayerAttackHelperMixin {
     @Redirect(method = "selectAttack", at = @At(value = "INVOKE", target = "Lnet/bettercombat/api/WeaponAttributes;attacks()[Lnet/bettercombat/api/WeaponAttributes$Attack;"))
     private static WeaponAttributes.Attack[] replaceAttacksList(WeaponAttributes instance, @Local(argsOnly = true) PlayerEntity player) {
         ExpandedWeaponAttributes exInstance = (ExpandedWeaponAttributes)(Object)instance;
@@ -18,5 +19,10 @@ public class PlayerAttackHelperMixin {
             return exInstance.antisBetterCombatOverhauls$getVersatileAttacks();
         }
         return instance.attacks();
+    }
+
+    @Invoker("evaluateConditions")
+    public static boolean invokeEvaluateConditions(WeaponAttributes.Condition[] conditions, PlayerEntity player, boolean isOffHandAttack) {
+        throw new AssertionError();
     }
 }

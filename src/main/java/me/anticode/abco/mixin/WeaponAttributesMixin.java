@@ -17,7 +17,7 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
     @Unique
     private double versatile_damage = 0;
     @Unique
-    private @Nullable WeaponAttributes.Attack[] heavy_attacks;
+    private @Nullable WeaponAttributes.Attack[] special_attacks;
     @Unique
     private @Nullable WeaponAttributes.Attack[] versatile_attacks;
 
@@ -74,17 +74,17 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
 
     @Override
     public void antisBetterCombatOverhauls$setHeavyAttacks(WeaponAttributes.Attack[] attacks) {
-        heavy_attacks = attacks;
+        special_attacks = attacks;
     }
 
     @Override
     public WeaponAttributes.Attack[] antisBetterCombatOverhauls$getHeavyAttacks() {
-        return heavy_attacks;
+        return special_attacks;
     }
 
     @Override
     public boolean antisBetterCombatOverhauls$hasHeavyAttacks() {
-        return heavy_attacks != null;
+        return special_attacks != null;
     }
 
     @ModifyReturnValue(method = "toString", at = @At("RETURN"))
