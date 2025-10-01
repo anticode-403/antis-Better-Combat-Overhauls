@@ -36,10 +36,6 @@ public abstract class WeaponAttributesHelperMixin {
         assert exb != null;
         assert exo != null;
         // Versatile
-        BCOverhauls.LOGGER.debug("B has_versatile: " + exb.antisBetterCombatOverhauls$hasVersatile());
-        BCOverhauls.LOGGER.debug("B versatile: " + exb.antisBetterCombatOverhauls$getVersatile());
-        BCOverhauls.LOGGER.debug("A versatile: " + exa.antisBetterCombatOverhauls$getVersatile());
-        BCOverhauls.LOGGER.debug("O versatile: " + exo.antisBetterCombatOverhauls$getVersatile());
         if (exb.antisBetterCombatOverhauls$hasVersatile()) {
             exo.antisBetterCombatOverhauls$setVersatile(exb.antisBetterCombatOverhauls$getVersatile());
         }

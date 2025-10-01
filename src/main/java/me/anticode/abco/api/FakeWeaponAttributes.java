@@ -43,20 +43,11 @@ public final class FakeWeaponAttributes {
     public WeaponAttributes convert() {
         WeaponAttributes attributes = new WeaponAttributes(attack_range, pose, off_hand_pose, two_handed, category, convertAttacks(attacks));
         ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
-        BCOverhauls.LOGGER.debug("category: " + category);
         if (versatile != null) {
-            BCOverhauls.LOGGER.debug("versatile: " + versatile);
             expandedAttributes.antisBetterCombatOverhauls$setVersatile(versatile);
         }
-        BCOverhauls.LOGGER.debug("versatile_damage: " + versatile_damage);
         expandedAttributes.antisBetterCombatOverhauls$setVersatileDamage(versatile_damage);
-        if (versatile_attacks != null) {
-            BCOverhauls.LOGGER.debug("versatile_attacks: " + versatile_attacks.length);
-        }
         expandedAttributes.antisBetterCombatOverhauls$setVersatileAttacks(convertAttacks(versatile_attacks));
-        if (special_attacks != null) {
-            BCOverhauls.LOGGER.debug("special_attacks: " + special_attacks.length);
-        }
         expandedAttributes.antisBetterCombatOverhauls$setHeavyAttacks(convertAttacks(special_attacks));
         return attributes;
     }
