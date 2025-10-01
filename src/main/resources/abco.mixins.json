@@ -4,6 +4,7 @@
   "package": "me.anticode.abco.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AttackHandMixin",
     "AttackMixin",
     "PlayerAttackHelperMixin",
     "PlayerEntityMixin",

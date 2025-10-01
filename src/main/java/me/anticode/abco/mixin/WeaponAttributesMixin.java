@@ -86,9 +86,4 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
     public boolean antisBetterCombatOverhauls$hasHeavyAttacks() {
         return special_attacks != null;
     }
-
-    @ModifyReturnValue(method = "toString", at = @At("RETURN"))
-    private String addExpandedAttributes(String original) {
-        return original.substring(original.lastIndexOf(']')) + " versatile=" + this.versatile + "]";
-    }
 }

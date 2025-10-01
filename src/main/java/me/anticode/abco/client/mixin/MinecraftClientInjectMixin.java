@@ -3,7 +3,8 @@ package me.anticode.abco.client.mixin;
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import me.anticode.abco.BCOverhauls;
-import me.anticode.abco.api.HeavyAttackClientApi;
+import me.anticode.abco.api.ABCOPlayerEntity;
+import me.anticode.abco.api.HeavyAttackComboApi;
 import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttackHand;
@@ -25,8 +26,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -34,10 +33,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.lang.reflect.Field;
-
 @Mixin(value = MinecraftClient.class, priority = 1500)
-public abstract class MinecraftClientInjectMixin implements HeavyAttackClientApi {
+public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi {
     @Shadow
     @Nullable
     public ClientWorld world;
@@ -51,9 +48,6 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackClientApi
     @Shadow
     private int itemUseCooldown;
 
-    @Shadow
-    @Final
-    private static Logger LOGGER;
     @Unique
     private int heavyCombo = 0;
 
@@ -66,14 +60,17 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackClientApi
 
     @TargetHandler(
             mixin = "net.bettercombat.mixin.client.MinecraftClientInject",
-            name = "Lnet/bettercombat/mixin/client/MinecraftClientInject;isTargetingMineableBlock()Z"
+            name = "isTargetingMineableBlock()Z"
     )
     @ModifyReturnValue(
             method = "@MixinSquared:Handler",
             at = @At(value = "RETURN")
     )
     private boolean overrideTargetingMineableBlockAttack(boolean original) {
-        return targetingMineableBlockTrue();
+        if (original)
+            return targetingMineableBlockTrue();
+        else
+            return false;
     }
 
     @Unique
@@ -89,6 +86,22 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackClientApi
             return itemStack.getItem().getMiningSpeedMultiplier(itemStack, target) != 1;
         }
         return false;
+    }
+
+    @TargetHandler(
+            mixin = "net.bettercombat.mixin.client.MinecraftClientInject",
+            name = "startUpswing(Lnet/bettercombat/api/WeaponAttributes;)V"
+    )
+    @Inject(
+            method = "@MixinSquared:Handler",
+            at = @At("RETURN")
+    )
+    private void setWasLastAttackSpecial(WeaponAttributes attributes, CallbackInfo ci) {
+        MinecraftClient client = ((MinecraftClient)(Object)this);
+        ClientPlayerEntity player = client.player;
+        ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
+        assert abcoPlayerEntity != null;
+        abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
     }
 
     @Inject(method = "doItemUse", at = @At(value = "HEAD"), cancellable = true)
@@ -116,8 +129,9 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackClientApi
         BCOverhauls.LOGGER.debug("Passed hand check.");
         float upswingRate = (float)hand.upswingRate();
         try {
+            BCOverhauls.LOGGER.debug("Risky business from here, folks.");
             if (((int)MinecraftClient.class.getDeclaredField("upswingTicks").get(client)) > 0 || attackCooldown > 0 || player.isUsingItem() || player.getAttackCooldownProgress(0) < (1 - upswingRate)) return;
-            BCOverhauls.LOGGER.debug("Starting heavy upswing.");
+            BCOverhauls.LOGGER.debug("Passed the first hurdle!");
             player.stopUsingItem();
             MinecraftClient.class.getDeclaredField("lastAttacked").set(client, 0);
             MinecraftClient.class.getDeclaredField("upswingStack").set(client, player.getMainHandStack());
@@ -134,6 +148,9 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackClientApi
             ((PlayerAttackAnimatable)player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
             ClientPlayNetworking.send(Packets.AttackAnimation.ID, (new Packets.AttackAnimation(player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate)).write());
             BetterCombatClientEvents.ATTACK_START.invoke((handler) -> handler.onPlayerAttackStart(player, hand));
+            ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
+            assert abcoPlayerEntity != null;
+            abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(true);
         } catch (Throwable throwable) {
             BCOverhauls.LOGGER.error(throwable.getMessage(), throwable);
         }

@@ -1,6 +1,7 @@
 package me.anticode.abco.logic;
 
 import me.anticode.abco.BCOverhauls;
+import me.anticode.abco.api.ExpandedAttackHand;
 import me.anticode.abco.api.ExpandedWeaponAttributes;
 import me.anticode.abco.mixin.PlayerAttackHelperMixin;
 import net.bettercombat.api.AttackHand;
@@ -28,7 +29,10 @@ public class ExpandedPlayerAttackHelper {
                 AttackSelection attackSelection = selectHeavyAttack(heavyComboCount, attributes, expandedAttributes, player, false);
                 WeaponAttributes.Attack attack = attackSelection.attack;
                 ComboState combo = attackSelection.comboState;
-                return new AttackHand(attack, combo, false, attributes, itemStack);
+                AttackHand attackHand = new AttackHand(attack, combo, false, attributes, itemStack);
+                ExpandedAttackHand expandedAttackHand = (ExpandedAttackHand)(Object)attackHand;
+                expandedAttackHand.antisBetterCombatOverhauls$setSpecialAttack(true);
+                return attackHand;
             }
         }
         return null;

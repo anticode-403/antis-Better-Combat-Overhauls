@@ -1,18 +1,60 @@
 package me.anticode.abco.mixin;
 
+import com.bawnorton.mixinsquared.TargetHandler;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import me.anticode.abco.api.ABCOPlayerEntity;
 import me.anticode.abco.api.ExpandedAttack;
 import me.anticode.abco.api.ExpandedWeaponAttributes;
+import me.anticode.abco.api.HeavyAttackComboApi;
+import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
+import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.EntityPlayer_BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
 import net.minecraft.entity.player.PlayerEntity;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.*;
 
-@Mixin(PlayerEntity.class)
-public class PlayerEntityMixin {
+@Mixin(value = PlayerEntity.class, priority = 1500)
+public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttackComboApi {
+    @Unique
+    private boolean wasLastAttackSpecial = false;
+    @Unique
+    private int heavyCombo = 0;
+
+    @Override
+    public boolean antisBetterCombatOverhauls$wasLastAttackSpecial() {
+        return wasLastAttackSpecial;
+    }
+    @Override
+    public void antisBetterCombatOverhauls$setLastAttackSpecial(boolean attack) {
+        wasLastAttackSpecial = attack;
+    }
+
+    @Override
+    public int antisBetterCombatOverhauls$getHeavyCombo() {
+        return heavyCombo;
+    }
+    @Override
+    public void antisBetterCombatOverhauls$setHeavyCombo(int combo) {
+        heavyCombo = combo;
+    }
+
+    @TargetHandler(
+            mixin = "net.bettercombat.mixin.PlayerEntityMixin",
+            name = "getCurrentAttack()Lnet/bettercombat/api/AttackHand;"
+    )
+    @ModifyReturnValue(
+            method = "@MixinSquared:Handler",
+            at = @At(value = "RETURN")
+    )
+    private @Nullable AttackHand overrideGetCurrentAttack(AttackHand original) {
+        if (wasLastAttackSpecial) {
+            return ExpandedPlayerAttackHelper.getCurrentHeavyAttack((PlayerEntity)(Object)this, heavyCombo);
+        }
+        return original;
+    }
 
     @ModifyVariable(method = "attack", at = @At("STORE"), ordinal = 0)
     private float injectVersatileDamage(float value) {
