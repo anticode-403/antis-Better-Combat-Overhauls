@@ -18,7 +18,8 @@
     ]
   },
   "mixins": [
-    "abco.mixins.json"
+    "abco.mixins.json",
+    "abco.client.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",

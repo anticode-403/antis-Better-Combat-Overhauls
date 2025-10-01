@@ -21,6 +21,8 @@ repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases/" }
     maven { url 'https://maven.kosmx.dev/' }
+    maven { url "https://maven.bawnorton.com/releases" }
+    maven { url "https://maven.enjarai.dev/mirrors" }
 }
 
 dependencies {
@@ -36,6 +38,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
     include modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim}")
+    include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.6-beta.1")))
 }
 
 processResources {

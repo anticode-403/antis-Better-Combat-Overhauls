@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.anticode.abco.client.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "MinecraftClientInjectMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}
