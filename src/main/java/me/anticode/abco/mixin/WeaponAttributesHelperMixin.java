@@ -26,8 +26,9 @@ public abstract class WeaponAttributesHelperMixin {
     private final static Type fakeAttributesContainerFormat = (new TypeToken<FakeAttributesContainer>() {
     }).getType();
 
-    @ModifyReturnValue(method = "override", at = @At("RETURN"))
+    @ModifyReturnValue(method = "override", at = @At("TAIL"))
     private static WeaponAttributes addExpandedWeaponAttributes(WeaponAttributes original, @Local(argsOnly = true, ordinal = 0) WeaponAttributes a, @Local(argsOnly = true, ordinal = 1) WeaponAttributes b) {
+
         ExpandedWeaponAttributes exa = (ExpandedWeaponAttributes)(Object)a;
         ExpandedWeaponAttributes exb = (ExpandedWeaponAttributes)(Object)b;
         ExpandedWeaponAttributes exo = (ExpandedWeaponAttributes)(Object)original;
@@ -35,6 +36,10 @@ public abstract class WeaponAttributesHelperMixin {
         assert exb != null;
         assert exo != null;
         // Versatile
+        BCOverhauls.LOGGER.debug("B has_versatile: " + exb.antisBetterCombatOverhauls$hasVersatile());
+        BCOverhauls.LOGGER.debug("B versatile: " + exb.antisBetterCombatOverhauls$getVersatile());
+        BCOverhauls.LOGGER.debug("A versatile: " + exa.antisBetterCombatOverhauls$getVersatile());
+        BCOverhauls.LOGGER.debug("O versatile: " + exo.antisBetterCombatOverhauls$getVersatile());
         if (exb.antisBetterCombatOverhauls$hasVersatile()) {
             exo.antisBetterCombatOverhauls$setVersatile(exb.antisBetterCombatOverhauls$getVersatile());
         }

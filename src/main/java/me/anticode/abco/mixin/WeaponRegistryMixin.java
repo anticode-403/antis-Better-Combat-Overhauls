@@ -1,35 +1,30 @@
 package me.anticode.abco.mixin;
 
-import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import me.anticode.abco.BCOverhauls;
-import me.anticode.abco.api.ExpandedWeaponAttributes;
-import net.bettercombat.api.AttributesContainer;
-import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.logic.WeaponRegistry;
+import net.minecraft.resource.Resource;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 @Mixin(value = WeaponRegistry.class, remap = false)
 public abstract class WeaponRegistryMixin {
-    @Shadow
-    private static Map<Identifier, AttributesContainer> containers;
 
-    @Inject(method = "resolveAttributes", at = @At("RETURN"))
-    private static void resolveAttributesMixin(Identifier itemId, AttributesContainer container, CallbackInfoReturnable<WeaponAttributes> cir) {
-        ExpandedWeaponAttributes expandedWeaponAttributes = (ExpandedWeaponAttributes)(Object)cir.getReturnValue();
-        BCOverhauls.LOGGER.debug("ABCO GET ID: " + itemId.toString());
-        BCOverhauls.LOGGER.debug("ABCO GET VERSATILE: " + expandedWeaponAttributes.antisBetterCombatOverhauls$getVersatile());
-        if (expandedWeaponAttributes.antisBetterCombatOverhauls$getHeavyAttacks() != null) {
-            BCOverhauls.LOGGER.debug("ABCO GET VERSATILE ATTACKS: " + (expandedWeaponAttributes.antisBetterCombatOverhauls$getVersatileAttacks().length > 0));
+    @Redirect(method = "loadContainers", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ResourceManager;findResources(Ljava/lang/String;Ljava/util/function/Predicate;)Ljava/util/Map;"))
+    private static Map<Identifier, Resource> loadContainers(ResourceManager instance, String s, Predicate<Identifier> identifierPredicate) {
+        Map<Identifier, Resource> resources = instance.findResources("weapon_attributes", (fileName) -> fileName.getPath().endsWith(".json"));
+        Map<Identifier, Resource> result = new HashMap<>();
+        for (Map.Entry<Identifier, Resource> entry : resources.entrySet()) {
+            if (entry.getKey().getNamespace().equals("abco")) {
+                Identifier overwrite = new Identifier("bettercombat", entry.getKey().getPath());
+                result.put(overwrite, entry.getValue());
+            }
         }
+        return result;
     }
 }
