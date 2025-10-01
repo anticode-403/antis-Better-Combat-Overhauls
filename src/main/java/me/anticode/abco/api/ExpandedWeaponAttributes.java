@@ -13,7 +13,10 @@ public interface ExpandedWeaponAttributes {
 
     void antisBetterCombatOverhauls$setVersatileDamage(double versatile);
 
-    boolean antisBetterCombatOverhauls$hasVersatileDamage();
+    double antisBetterCombatOverhauls$getCriticalMultiplier();
+
+    void antisBetterCombatOverhauls$setCriticalMultiplier(double multiplier
+    );
 
     void antisBetterCombatOverhauls$setVersatileAttacks(WeaponAttributes.Attack[] attacks);
 

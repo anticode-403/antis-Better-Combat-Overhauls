@@ -26,6 +26,9 @@ public class WeaponAttributeTooltipMixin {
                 lines.add(index, Text.literal(" ").append(Text.translatable("attribute.modifier.equals.0", new Object[]{ItemStack.MODIFIER_FORMAT.format(versatile_damage), Text.translatable("weapon_attributes.name.versatile_damage")}).formatted(Formatting.DARK_GREEN)));
             else
                 lines.add(index, Text.literal(" ").append(Text.translatable("weapon_attributes.name.versatile").formatted(Formatting.DARK_GREEN)));
+            double critical_multiplier = expandedAttributes.antisBetterCombatOverhauls$getCriticalMultiplier();
+            if (critical_multiplier == 0) critical_multiplier = 1.5F;
+            lines.add(index + 1, Text.literal(" ").append(Text.translatable("attribute.modifier.equals.0", new Object[]{ItemStack.MODIFIER_FORMAT.format(critical_multiplier), Text.translatable("weapon_attributes.name.critical_multiplier")}).formatted(Formatting.DARK_GREEN)));
         }
     }
 }

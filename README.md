@@ -1,6 +1,15 @@
 # ABCO
 ABCO is a mod designed to add many features to Better Combat necessary to make it a truly engaging combat experience.
 
+# Main Features
+ABCO is stock full of great features to spice up your Minecraft combat!
+- Critical hits are now dependent on your combo, usually granted by the last hit in the combo.
+- Critical damage is now weapon dependent, with higher attack speed weapons giving the biggest benefit.
+- Some weapons are now _Versatile_, which gives them increased damage, a unique combo, and the ability to special attack.
+- Two-Handed and Versatile weapons now have the ability to special attack.
+- Weapons only attempt to mine if the block being targeted requires that weapon as a tool (axes and wood, swords and cobwebs)
+- Dual-Wielded weapons can now attack individually
+
 # Adding Support
 If your mod uses default Better Combat weapon attributes, then it should support ABCO out of the box! 
 

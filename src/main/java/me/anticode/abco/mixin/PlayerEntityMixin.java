@@ -7,6 +7,8 @@ import net.bettercombat.api.WeaponAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(PlayerEntity.class)
@@ -40,5 +42,14 @@ public class PlayerEntityMixin {
         EntityPlayer_BetterCombat player_bc = (EntityPlayer_BetterCombat)player;
         ExpandedAttack expandedAttack = (ExpandedAttack)(Object)player_bc.getCurrentAttack().attack();
         return value + expandedAttack.antisBetterCombatOverhauls$getKnockback();
+    }
+
+    @ModifyConstant(method = "attack", constant = @Constant(floatValue = 1.5F))
+    private float injectNewDamage(float value) {
+        PlayerEntity player = (PlayerEntity)(Object)this;
+        EntityPlayer_BetterCombat player_bc = (EntityPlayer_BetterCombat)player;
+        ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)player_bc.getCurrentAttack().attributes();
+        if (expandedAttributes.antisBetterCombatOverhauls$getCriticalMultiplier() == 0) return value;
+        return (float) expandedAttributes.antisBetterCombatOverhauls$getCriticalMultiplier();
     }
 }

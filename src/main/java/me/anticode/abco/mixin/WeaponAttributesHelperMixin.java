@@ -38,6 +38,13 @@ public abstract class WeaponAttributesHelperMixin {
         assert exa != null;
         assert exb != null;
         assert exo != null;
+        // Critical Multiplier
+        if (exb.antisBetterCombatOverhauls$getCriticalMultiplier() != 0) {
+            exo.antisBetterCombatOverhauls$setCriticalMultiplier(exb.antisBetterCombatOverhauls$getCriticalMultiplier());
+        }
+        else {
+            exo.antisBetterCombatOverhauls$setCriticalMultiplier(exa.antisBetterCombatOverhauls$getCriticalMultiplier());
+        }
         // Versatile
         if (exb.antisBetterCombatOverhauls$hasVersatile()) {
             exo.antisBetterCombatOverhauls$setVersatile(exb.antisBetterCombatOverhauls$getVersatile());
@@ -46,7 +53,7 @@ public abstract class WeaponAttributesHelperMixin {
             exo.antisBetterCombatOverhauls$setVersatile(exa.antisBetterCombatOverhauls$getVersatile());
         }
         // Versatile Damage
-        if (exb.antisBetterCombatOverhauls$hasVersatileDamage()) {
+        if (exb.antisBetterCombatOverhauls$getVersatileDamage() != 0) {
             exo.antisBetterCombatOverhauls$setVersatileDamage(exb.antisBetterCombatOverhauls$getVersatileDamage());
         }
         else {

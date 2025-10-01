@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = WeaponAttributes.class, remap = false)
 public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes {
     @Unique
+    private double critical_multiplier = 1.5F;
+    @Unique
     private @Nullable Boolean versatile;
     @Unique
     private double versatile_damage = 0;
@@ -46,8 +48,13 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
     }
 
     @Override
-    public boolean antisBetterCombatOverhauls$hasVersatileDamage() {
-        return versatile_damage != 0;
+    public void antisBetterCombatOverhauls$setCriticalMultiplier(double damage) {
+        critical_multiplier = damage;
+    }
+
+    @Override
+    public double antisBetterCombatOverhauls$getCriticalMultiplier() {
+        return critical_multiplier;
     }
 
     @Override

@@ -37,6 +37,7 @@
         }
       }
     ],
+    "critical_multiplier": 1.2,
     "versatile": true,
     "versatile_damage": 1.0,
     "versatile_attacks": [
