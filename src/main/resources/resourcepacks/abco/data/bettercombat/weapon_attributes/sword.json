@@ -80,13 +80,12 @@
         "damage_multiplier": 1.2,
         "critical": true,
         "knockback": 2,
-        "attack_speed_multiplier": 0.3,
+        "attack_speed_multiplier": 0.4,
         "angle": 150,
-        "upswing": 0.5,
+        "upswing": 0.3,
         "animation": "bettercombat:two_handed_slam",
         "swing_sound": {
-          "id": "bettercombat:claymore_slam",
-          "randomness": 0
+          "id": "bettercombat:pickaxe_swing"
         }
       }
     ]
