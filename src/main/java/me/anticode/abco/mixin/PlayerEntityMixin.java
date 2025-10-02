@@ -82,7 +82,9 @@ public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttack
     private int injectNewKBAttribute(int value) {
         PlayerEntity player = (PlayerEntity)(Object)this;
         EntityPlayer_BetterCombat player_bc = (EntityPlayer_BetterCombat)player;
-        ExpandedAttack expandedAttack = (ExpandedAttack)(Object)player_bc.getCurrentAttack().attack();
+        AttackHand hand = player_bc.getCurrentAttack();
+        if (hand == null) return value;
+        ExpandedAttack expandedAttack = (ExpandedAttack)(Object)hand.attack();
         return value + expandedAttack.antisBetterCombatOverhauls$getKnockback();
     }
 
@@ -90,7 +92,9 @@ public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttack
     private float injectNewDamage(float value) {
         PlayerEntity player = (PlayerEntity)(Object)this;
         EntityPlayer_BetterCombat player_bc = (EntityPlayer_BetterCombat)player;
-        ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)player_bc.getCurrentAttack().attributes();
+        AttackHand hand = player_bc.getCurrentAttack();
+        if (hand == null) return value;
+        ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)hand.attributes();
         if (expandedAttributes.antisBetterCombatOverhauls$getCriticalMultiplier() == 0) return value;
         return (float) expandedAttributes.antisBetterCombatOverhauls$getCriticalMultiplier();
     }
