@@ -51,7 +51,7 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
 
     @Override
     public boolean antisBetterCombatOverhauls$hasVersatilePose() {
-        return versatile_pose != null;
+        return versatile_pose != null && !versatile_pose.isEmpty();
     }
 
     @Override
