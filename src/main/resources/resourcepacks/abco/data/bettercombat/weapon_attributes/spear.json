@@ -4,6 +4,7 @@
     "pose": "bettercombat:pose_two_handed_polearm",
     "two_handed": true,
     "category": "spear",
+    "critical_multiplier": 1.1,
     "attacks": [
       {
         "hitbox": "FORWARD_BOX",
@@ -11,6 +12,17 @@
         "angle": 0,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_stab_right",
+        "swing_sound": {
+          "id": "bettercombat:spear_stab"
+        }
+      },
+      {
+        "hitbox": "FORWARD_BOX",
+        "damage_multiplier": 1,
+        "critical": true,
+        "angle": 0,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_stab_left",
         "swing_sound": {
           "id": "bettercombat:spear_stab"
         }

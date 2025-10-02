@@ -2,6 +2,7 @@
   "attributes": {
     "attack_range": 2.5,
     "category": "axe",
+    "critical_multiplier": 1.2,
     "attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",
