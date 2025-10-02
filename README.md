@@ -1,7 +1,9 @@
 # ABCO
 ABCO is a mod designed to add many features to Better Combat necessary to make it a truly engaging combat experience.
 
-# Main Features
+As of current, ABCO and Better Combat Extension are **NOT** compatible, but it is a future goal.
+
+# Core Features
 ABCO is stock full of great features to spice up your Minecraft combat!
 - Critical hits are now dependent on your combo, usually granted by the last hit in the combo.
 - Critical damage is now weapon dependent, with higher attack speed weapons giving the biggest benefit.
