@@ -20,12 +20,9 @@ public class ExpandedPlayerAttackHelper {
         if (itemStack.isEmpty()) return null;
         WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);
         if (attributes == null) return null;
-        BCOverhauls.LOGGER.debug("Passed attributes check");
         ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
         if (attributes.isTwoHanded() || (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && player.getOffHandStack().isEmpty())) {
-            BCOverhauls.LOGGER.debug("Passed weapons check");
             if (expandedAttributes.antisBetterCombatOverhauls$hasHeavyAttacks()) {
-                BCOverhauls.LOGGER.debug("Passed attacks check");
                 AttackSelection attackSelection = selectHeavyAttack(heavyComboCount, attributes, expandedAttributes, player, false);
                 WeaponAttributes.Attack attack = attackSelection.attack;
                 ComboState combo = attackSelection.comboState;

@@ -6,6 +6,7 @@ import me.anticode.abco.BCOverhauls;
 import me.anticode.abco.api.ABCOPlayerEntity;
 import me.anticode.abco.api.HeavyAttackComboApi;
 import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
+import me.anticode.abco.network.AbcoPackets;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.WeaponAttributes;
@@ -94,7 +95,7 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
     )
     @Inject(
             method = "@MixinSquared:Handler",
-            at = @At("RETURN")
+            at = @At(value = "INVOKE", target = "Lnet/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking;send(Lnet/minecraft/util/Identifier;Lnet/minecraft/network/PacketByteBuf;)V")
     )
     private void setWasLastAttackSpecial(WeaponAttributes attributes, CallbackInfo ci) {
         MinecraftClient client = ((MinecraftClient)(Object)this);
@@ -102,6 +103,7 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
         ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
         assert abcoPlayerEntity != null;
         abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
+        ClientPlayNetworking.send(AbcoPackets.C2S_PlayerUpdaterRequest.ID, (new AbcoPackets.C2S_PlayerUpdaterRequest(player.getId(), false, 0)).write());
     }
 
     @Inject(method = "doItemUse", at = @At(value = "HEAD"), cancellable = true)
@@ -121,17 +123,12 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
         MinecraftClient client = ((MinecraftClient)(Object)this);
         ClientPlayerEntity player = client.player;
         if (player == null) return;
-        BCOverhauls.LOGGER.debug("Starting heavy upswing.");
         if (player.isRiding()) return;
-        BCOverhauls.LOGGER.debug("Passed riding check.");
         AttackHand hand = ExpandedPlayerAttackHelper.getCurrentHeavyAttack(player, heavyCombo);
         if (hand == null) return;
-        BCOverhauls.LOGGER.debug("Passed hand check.");
         float upswingRate = (float)hand.upswingRate();
         try {
-            BCOverhauls.LOGGER.debug("Risky business from here, folks.");
             if (((int)MinecraftClient.class.getDeclaredField("upswingTicks").get(client)) > 0 || attackCooldown > 0 || player.isUsingItem() || player.getAttackCooldownProgress(0) < (1 - upswingRate)) return;
-            BCOverhauls.LOGGER.debug("Passed the first hurdle!");
             player.stopUsingItem();
             MinecraftClient.class.getDeclaredField("lastAttacked").set(client, 0);
             MinecraftClient.class.getDeclaredField("upswingStack").set(client, player.getMainHandStack());
@@ -146,6 +143,7 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             boolean isOffHand = hand.isOffHand();
             AnimatedHand animatedHand = AnimatedHand.from(isOffHand, attributes.isTwoHanded());
             ((PlayerAttackAnimatable)player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
+            ClientPlayNetworking.send(AbcoPackets.C2S_PlayerUpdaterRequest.ID, (new AbcoPackets.C2S_PlayerUpdaterRequest(player.getId(), true, heavyCombo)).write());
             ClientPlayNetworking.send(Packets.AttackAnimation.ID, (new Packets.AttackAnimation(player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate)).write());
             BetterCombatClientEvents.ATTACK_START.invoke((handler) -> handler.onPlayerAttackStart(player, hand));
             ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
