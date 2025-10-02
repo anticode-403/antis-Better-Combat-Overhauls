@@ -43,8 +43,8 @@ import org.slf4j.Logger;
 import java.util.UUID;
 
 /*
- * This is particularly ugly, imo, because we're basically completely overwriting half of BC's packets, but
- * with the current tools available, I'm not really sure that there was another option.
+ * This is particularly ugly, imo, because we're basically completely overwriting how the server handles half of BC's
+ * packets, but with the current tools available, I'm not really sure that there was another option.
  */
 public class AbcoServerNetwork {
     private static final UUID COMBO_DAMAGE_MODIFIER_ID = UUID.randomUUID();
