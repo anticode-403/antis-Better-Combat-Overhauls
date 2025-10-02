@@ -10,14 +10,17 @@ import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
 import me.anticode.abco.network.AbcoPackets;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttackHand;
+import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.api.client.BetterCombatClientEvents;
 import net.bettercombat.client.BetterCombatClient;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.PlayerAttackHelper;
+import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.client.MinecraftClientAccessor;
+import net.bettercombat.mixin.client.MinecraftClientInject;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -32,6 +35,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = MinecraftClient.class, priority = 1500)
@@ -122,6 +126,30 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
         ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
         assert abcoPlayerEntity != null;
         abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
+    }
+
+    @TargetHandler(
+            mixin = "net.bettercombat.mixin.client.MinecraftClientInject",
+            name = "setComboCount(I)V"
+    )
+    @Inject(
+            method = "@MixinSquared:Handler",
+            at = @At(value = "HEAD"),
+            cancellable = true
+    )
+    private void redirectComboSetter(int comboCount, CallbackInfo ci) {
+        ABCOPlayerEntity abcoPlayer = ((ABCOPlayerEntity)player);
+        if (comboCount == 0) return;
+        if (abcoPlayer.antisBetterCombatOverhauls$wasLastAttackSpecial()) {
+            heavyCombo++;
+        } else {
+            try {
+                ((PlayerAttackProperties) player).setComboCount(comboCount);
+            } catch (Throwable throwable) {
+                BCOverhauls.LOGGER.error(throwable.getMessage(), throwable);
+            }
+        }
+        ci.cancel();
     }
 
     @Inject(method = "doItemUse", at = @At(value = "HEAD"), cancellable = true)
