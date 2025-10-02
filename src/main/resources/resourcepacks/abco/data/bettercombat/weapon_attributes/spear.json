@@ -27,6 +27,20 @@
           "id": "bettercombat:spear_stab"
         }
       }
+    ],
+    "special_attacks": [
+      {
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 0.1,
+        "knockback": 1,
+        "attack_speed_multiplier": 1.6,
+        "angle": 0,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_slash_horizontal_right",
+        "swing_sound": {
+          "id": "bettercombat:staff_slash"
+        }
+      }
     ]
   }
 }
