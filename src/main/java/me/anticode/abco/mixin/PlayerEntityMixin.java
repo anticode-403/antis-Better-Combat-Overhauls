@@ -75,7 +75,7 @@ public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttack
         PlayerEntity player = (PlayerEntity)(Object)this;
         EntityPlayer_BetterCombat player_bc = (EntityPlayer_BetterCombat)player;
         AttackHand hand = player_bc.getCurrentAttack();
-        if (hand == null) return value;
+        if (hand == null) return false;
         ExpandedAttack expandedAttack = (ExpandedAttack)(Object)hand.attack();
         return expandedAttack.antisBetterCombatOverhauls$getCritical();
     }
