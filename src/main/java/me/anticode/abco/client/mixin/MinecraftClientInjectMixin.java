@@ -42,6 +42,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = MinecraftClient.class, priority = 1500)
 public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi {
@@ -190,6 +191,24 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             }
         }
         ci.cancel();
+    }
+
+    @TargetHandler(
+            mixin = "net.bettercombat.mixin.client.MinecraftClientInject",
+            name = "updateTargetsIfNeeded()V"
+    )
+    @Inject(
+            method = "@MixinSquared:Handler",
+            at = @At(value = "INVOKE", target = "Lnet/bettercombat/logic/WeaponRegistry;getAttributes(Lnet/minecraft/item/ItemStack;)Lnet/bettercombat/api/WeaponAttributes;"),
+            cancellable = true
+    )
+    private void cancelUpdateTargetsIfNull(CallbackInfo ci, @Local AttackHand attackHand) {
+        if (attackHand == null) {
+            ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
+            assert abcoPlayerEntity != null;
+            abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
+            ci.cancel();
+        }
     }
 
     @Inject(method = "doItemUse", at = @At(value = "HEAD"), cancellable = true)
