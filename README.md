@@ -23,6 +23,7 @@ If not, there's a very simple list of attributes you can add to your weapon attr
     "critical_multiplier": 1.5,
     "versatile": false,
     "versatile_damage": 0.0,
+    "versatile_pose": "",
     "versatile_attacks": [
       // ...
     ],
