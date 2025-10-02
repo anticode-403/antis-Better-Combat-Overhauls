@@ -5,13 +5,14 @@
     "pose": "",
     "two_handed": false,
     "category": "trident",
+    "critical_multiplier": 1.1,
     "attacks": [
       {
         "animation": "bettercombat:one_handed_stab"
       }
     ],
     "versatile": true,
-    "versatile_damage": 2,
+    "versatile_damage": 1,
     "versatile_attacks": [
       {
         "hitbox": "FORWARD_BOX",
@@ -26,6 +27,7 @@
       {
         "hitbox": "FORWARD_BOX",
         "damage_multiplier": 1,
+        "critical": true,
         "angle": 0,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_stab_left",
