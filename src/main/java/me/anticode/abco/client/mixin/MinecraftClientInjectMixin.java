@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.anticode.abco.BCOverhauls;
 import me.anticode.abco.api.ABCOPlayerEntity;
+import me.anticode.abco.api.ExpandedAttack;
 import me.anticode.abco.api.ExpandedAttackHand;
 import me.anticode.abco.api.HeavyAttackComboApi;
 import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
@@ -28,8 +29,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -124,12 +127,19 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             at = @At(value = "HEAD")
     )
     private void injectInvertWeaponAttack(WeaponAttributes attributes, CallbackInfo ci) {
-        MinecraftClient client = ((MinecraftClient)(Object)this);
-        ClientPlayerEntity player = client.player;
-        if (player.isRiding()) return;
-        ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
-        assert abcoPlayerEntity != null;
-        abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
+        try {
+            MinecraftClient client = ((MinecraftClient)(Object)this);
+            ClientPlayerEntity player = client.player;
+            if (player.isRiding()) return;
+            ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
+            assert abcoPlayerEntity != null;
+            AttackHand hand = (AttackHand)(MinecraftClient.class.getDeclaredMethod("getCurrentHand").invoke(client));
+            float upswingRate = (float)hand.upswingRate();
+            if (((int)MinecraftClient.class.getDeclaredField("upswingTicks").get(client)) > 0 || attackCooldown > 0 || player.isUsingItem() || player.getAttackCooldownProgress(0) < (1 - upswingRate)) return;
+            abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
+        }  catch (Throwable throwable) {
+            BCOverhauls.LOGGER.error(throwable.getMessage(), throwable);
+        }
     }
 
     @TargetHandler(
@@ -198,7 +208,7 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             player.stopUsingItem();
             MinecraftClient.class.getDeclaredField("lastAttacked").set(client, 0);
             MinecraftClient.class.getDeclaredField("upswingStack").set(client, player.getMainHandStack());
-            float attackCooldownTicksFloat = PlayerAttackHelper.getAttackCooldownTicksCapped(player);
+            float attackCooldownTicksFloat = PlayerAttackHelper.getAttackCooldownTicksCapped(player) * (float)((double)1.0F / ((ExpandedAttack)(Object)hand.attack()).antisBetterCombatOverhauls$getAttackSpeedMultiplier());
             int attackCooldownTicks = Math.round(attackCooldownTicksFloat);
             MinecraftClient.class.getDeclaredField("comboReset").set(client, Math.round(attackCooldownTicksFloat * BetterCombat.config.combo_reset_rate));
             MinecraftClient.class.getDeclaredField("upswingTicks").set(client, Math.max(Math.round(attackCooldownTicksFloat * upswingRate), 1));

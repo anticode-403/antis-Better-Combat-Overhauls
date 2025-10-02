@@ -67,6 +67,7 @@ public abstract class WeaponAttributesHelperMixin {
         assert exOriginal != null;
         exOriginal.antisBetterCombatOverhauls$setKnockback(exOverride.antisBetterCombatOverhauls$getKnockback());
         exOriginal.antisBetterCombatOverhauls$setCritical(exOverride.antisBetterCombatOverhauls$getCritical());
+        exOriginal.antisBetterCombatOverhauls$setAttackSpeedMultiplier(exOverride.antisBetterCombatOverhauls$getAttackSpeedMultiplier());
         return original;
     }
 }

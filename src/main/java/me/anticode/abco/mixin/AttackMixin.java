@@ -11,6 +11,8 @@ public abstract class AttackMixin implements ExpandedAttack {
     private boolean critical = false;
     @Unique
     private int knockback = 0;
+    @Unique
+    private double attack_speed_multiplier = 1;
 
     public void antisBetterCombatOverhauls$setCritical(boolean value) {
         critical = value;
@@ -24,5 +26,13 @@ public abstract class AttackMixin implements ExpandedAttack {
     }
     public int antisBetterCombatOverhauls$getKnockback() {
         return knockback;
+    }
+
+    public void antisBetterCombatOverhauls$setAttackSpeedMultiplier(double speed) {
+        attack_speed_multiplier = speed;
+    }
+
+    public double antisBetterCombatOverhauls$getAttackSpeedMultiplier() {
+        return attack_speed_multiplier;
     }
 }

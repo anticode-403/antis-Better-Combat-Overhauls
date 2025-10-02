@@ -80,6 +80,7 @@
         "damage_multiplier": 1.2,
         "critical": true,
         "knockback": 2,
+        "attack_speed_multiplier": 0.3,
         "angle": 150,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slam",

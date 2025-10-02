@@ -1,9 +1,12 @@
 package me.anticode.abco.api;
 
 public interface ExpandedAttack {
-    public void antisBetterCombatOverhauls$setCritical(boolean value);
-    public boolean antisBetterCombatOverhauls$getCritical();
+    void antisBetterCombatOverhauls$setCritical(boolean value);
+    boolean antisBetterCombatOverhauls$getCritical();
 
-    public void antisBetterCombatOverhauls$setKnockback(int value);
-    public int antisBetterCombatOverhauls$getKnockback();
+    void antisBetterCombatOverhauls$setKnockback(int value);
+    int antisBetterCombatOverhauls$getKnockback();
+
+    void antisBetterCombatOverhauls$setAttackSpeedMultiplier(double speed);
+    double antisBetterCombatOverhauls$getAttackSpeedMultiplier();
 }
