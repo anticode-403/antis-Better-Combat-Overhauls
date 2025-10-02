@@ -18,7 +18,6 @@ import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.client.MinecraftClientAccessor;
-import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
