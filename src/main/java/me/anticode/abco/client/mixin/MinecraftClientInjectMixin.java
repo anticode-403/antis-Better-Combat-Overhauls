@@ -2,6 +2,7 @@ package me.anticode.abco.client.mixin;
 
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import me.anticode.abco.BCOverhauls;
 import me.anticode.abco.api.ABCOPlayerEntity;
 import me.anticode.abco.api.HeavyAttackComboApi;
@@ -95,15 +96,19 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
     )
     @Inject(
             method = "@MixinSquared:Handler",
-            at = @At(value = "INVOKE", target = "Lnet/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking;send(Lnet/minecraft/util/Identifier;Lnet/minecraft/network/PacketByteBuf;)V")
+            at = @At(value = "INVOKE", target = "Lnet/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking;send(Lnet/minecraft/util/Identifier;Lnet/minecraft/network/PacketByteBuf;)V"),
+            cancellable = true
     )
-    private void setWasLastAttackSpecial(WeaponAttributes attributes, CallbackInfo ci) {
+    private void overwriteBCAttackPackets(WeaponAttributes attributes, CallbackInfo ci, @Local AnimatedHand animatedHand, @Local String animationName, @Local boolean isOffHand, @Local(ordinal=0) float upswingRate, @Local(ordinal=1) float attackCooldownTicksFloat, @Local AttackHand hand) {
         MinecraftClient client = ((MinecraftClient)(Object)this);
         ClientPlayerEntity player = client.player;
         ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
         assert abcoPlayerEntity != null;
         abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
-        ClientPlayNetworking.send(AbcoPackets.C2S_PlayerUpdaterRequest.ID, (new AbcoPackets.C2S_PlayerUpdaterRequest(player.getId(), false, 0)).write());
+        ((PlayerAttackAnimatable)player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
+        ClientPlayNetworking.send(AbcoPackets.C2S_PlayerUpdaterRequest.ID, (new AbcoPackets.C2S_PlayerUpdaterRequest(player.getId(), false, 0, animatedHand, animationName, attackCooldownTicksFloat, upswingRate)).write());
+        BetterCombatClientEvents.ATTACK_START.invoke((handler) -> handler.onPlayerAttackStart(player, hand));
+        ci.cancel();
     }
 
     @Inject(method = "doItemUse", at = @At(value = "HEAD"), cancellable = true)
@@ -143,8 +148,7 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             boolean isOffHand = hand.isOffHand();
             AnimatedHand animatedHand = AnimatedHand.from(isOffHand, attributes.isTwoHanded());
             ((PlayerAttackAnimatable)player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
-            ClientPlayNetworking.send(AbcoPackets.C2S_PlayerUpdaterRequest.ID, (new AbcoPackets.C2S_PlayerUpdaterRequest(player.getId(), true, heavyCombo)).write());
-            ClientPlayNetworking.send(Packets.AttackAnimation.ID, (new Packets.AttackAnimation(player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate)).write());
+            ClientPlayNetworking.send(AbcoPackets.C2S_PlayerUpdaterRequest.ID, (new AbcoPackets.C2S_PlayerUpdaterRequest(player.getId(), true, heavyCombo, animatedHand, animationName, attackCooldownTicksFloat, upswingRate)).write());
             BetterCombatClientEvents.ATTACK_START.invoke((handler) -> handler.onPlayerAttackStart(player, hand));
             ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
             assert abcoPlayerEntity != null;
