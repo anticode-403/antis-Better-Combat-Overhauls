@@ -57,7 +57,7 @@ public abstract class WeaponAttributesHelperMixin {
             exo.antisBetterCombatOverhauls$setVersatileAttacks(exa.antisBetterCombatOverhauls$getVersatileAttacks());
         }
         // Heavy Attacks
-        if (exb.antisBetterCombatOverhauls$hasHeavyAttacks() && exb.antisBetterCombatOverhauls$getHeavyAttacks().length > 0) {
+        if (exb.antisBetterCombatOverhauls$hasHeavyAttacks()) {
             exo.antisBetterCombatOverhauls$setHeavyAttacks(exb.antisBetterCombatOverhauls$getHeavyAttacks());
         }
         else {
