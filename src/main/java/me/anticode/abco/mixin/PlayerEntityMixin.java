@@ -74,7 +74,9 @@ public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttack
     private boolean injectNewCritSystem(boolean value) {
         PlayerEntity player = (PlayerEntity)(Object)this;
         EntityPlayer_BetterCombat player_bc = (EntityPlayer_BetterCombat)player;
-        ExpandedAttack expandedAttack = (ExpandedAttack)(Object)player_bc.getCurrentAttack().attack();
+        AttackHand hand = player_bc.getCurrentAttack();
+        if (hand == null) return value;
+        ExpandedAttack expandedAttack = (ExpandedAttack)(Object)hand.attack();
         return expandedAttack.antisBetterCombatOverhauls$getCritical();
     }
 
