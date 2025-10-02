@@ -35,6 +35,13 @@ public abstract class WeaponAttributesHelperMixin {
         else {
             exo.antisBetterCombatOverhauls$setVersatile(exa.antisBetterCombatOverhauls$getVersatile());
         }
+        // Versatile Pose
+        if (exb.antisBetterCombatOverhauls$hasVersatilePose()) {
+            exo.antisBetterCombatOverhauls$setVersatilePose(exb.antisBetterCombatOverhauls$getVersatilePose());
+        }
+        else {
+            exo.antisBetterCombatOverhauls$setVersatilePose(exa.antisBetterCombatOverhauls$getVersatilePose());
+        }
         // Versatile Damage
         if (exb.antisBetterCombatOverhauls$getVersatileDamage() != 0) {
             exo.antisBetterCombatOverhauls$setVersatileDamage(exb.antisBetterCombatOverhauls$getVersatileDamage());

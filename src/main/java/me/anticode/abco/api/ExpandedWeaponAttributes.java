@@ -9,6 +9,12 @@ public interface ExpandedWeaponAttributes {
 
     boolean antisBetterCombatOverhauls$hasVersatile();
 
+    String antisBetterCombatOverhauls$getVersatilePose();
+
+    void antisBetterCombatOverhauls$setVersatilePose(String pose);
+
+    boolean antisBetterCombatOverhauls$hasVersatilePose();
+
     double antisBetterCombatOverhauls$getVersatileDamage();
 
     void antisBetterCombatOverhauls$setVersatileDamage(double versatile);

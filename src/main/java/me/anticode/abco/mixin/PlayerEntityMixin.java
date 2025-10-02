@@ -2,10 +2,7 @@ package me.anticode.abco.mixin;
 
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import me.anticode.abco.api.ABCOPlayerEntity;
-import me.anticode.abco.api.ExpandedAttack;
-import me.anticode.abco.api.ExpandedWeaponAttributes;
-import me.anticode.abco.api.HeavyAttackComboApi;
+import me.anticode.abco.api.*;
 import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.EntityPlayer_BetterCombat;
@@ -15,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = PlayerEntity.class, priority = 1500)
 public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttackComboApi {
@@ -99,5 +97,13 @@ public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttack
         ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)hand.attributes();
         if (expandedAttributes.antisBetterCombatOverhauls$getCriticalMultiplier() == 0) return value;
         return (float) expandedAttributes.antisBetterCombatOverhauls$getCriticalMultiplier();
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void postTick(CallbackInfo ci) {
+        PlayerEntity player = (PlayerEntity)(Object)this;
+        if (player.getWorld().isClient()) {
+            ((VersatileAnimatedPlayer)player).antisBetterCombatOverhauls$updateVersatilePose();
+        }
     }
 }

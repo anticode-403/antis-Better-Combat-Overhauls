@@ -13,6 +13,7 @@
     ],
     "versatile": true,
     "versatile_damage": 1,
+    "versatile_pose": "bettercombat:pose_two_handed_polearm",
     "versatile_attacks": [
       {
         "hitbox": "FORWARD_BOX",

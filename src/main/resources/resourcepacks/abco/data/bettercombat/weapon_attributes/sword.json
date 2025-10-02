@@ -39,6 +39,7 @@
     ],
     "critical_multiplier": 1.2,
     "versatile": true,
+    "versatile_pose": "bettercombat:pose_two_handed_sword",
     "versatile_damage": 1.0,
     "versatile_attacks": [
       {
