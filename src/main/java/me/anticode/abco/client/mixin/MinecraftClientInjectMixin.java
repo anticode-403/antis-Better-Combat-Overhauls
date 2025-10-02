@@ -102,13 +102,27 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
     private void overwriteBCAttackPackets(WeaponAttributes attributes, CallbackInfo ci, @Local AnimatedHand animatedHand, @Local String animationName, @Local boolean isOffHand, @Local(ordinal=0) float upswingRate, @Local(ordinal=1) float attackCooldownTicksFloat, @Local AttackHand hand) {
         MinecraftClient client = ((MinecraftClient)(Object)this);
         ClientPlayerEntity player = client.player;
-        ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
-        assert abcoPlayerEntity != null;
-        abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
         ((PlayerAttackAnimatable)player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
         ClientPlayNetworking.send(AbcoPackets.C2S_PlayerUpdaterRequest.ID, (new AbcoPackets.C2S_PlayerUpdaterRequest(player.getId(), false, 0, animatedHand, animationName, attackCooldownTicksFloat, upswingRate)).write());
         BetterCombatClientEvents.ATTACK_START.invoke((handler) -> handler.onPlayerAttackStart(player, hand));
         ci.cancel();
+    }
+
+    @TargetHandler(
+            mixin = "net.bettercombat.mixin.client.MinecraftClientInject",
+            name = "startUpswing(Lnet/bettercombat/api/WeaponAttributes;)V"
+    )
+    @Inject(
+            method = "@MixinSquared:Handler",
+            at = @At(value = "HEAD")
+    )
+    private void injectInvertWeaponAttack(WeaponAttributes attributes, CallbackInfo ci) {
+        MinecraftClient client = ((MinecraftClient)(Object)this);
+        ClientPlayerEntity player = client.player;
+        if (player.isRiding()) return;
+        ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
+        assert abcoPlayerEntity != null;
+        abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
     }
 
     @Inject(method = "doItemUse", at = @At(value = "HEAD"), cancellable = true)
