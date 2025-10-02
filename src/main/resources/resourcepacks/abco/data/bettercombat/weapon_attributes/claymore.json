@@ -27,12 +27,37 @@
         }
       },
       {
+        "hitbox": "HORIZONTAL_PLANE",
+        "damage_multiplier": 0.75,
+        "critical": true,
+        "angle": 150,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_slash_horizontal_left",
+        "swing_sound": {
+          "id": "bettercombat:claymore_swing"
+        }
+      },
+      {
+        "hitbox": "FORWARD_BOX",
+        "damage_multiplier": 1,
+        "critical": true,
+        "angle": 0,
+        "upswing": 0.5,
+        "animation": "bettercombat:two_handed_stab_left",
+        "swing_sound": {
+          "id": "bettercombat:claymore_stab"
+        }
+      }
+    ],
+    "special_attacks": [
+      {
         "hitbox": "VERTICAL_PLANE",
         "critical": true,
         "knockback": 1,
-        "damage_multiplier": 1.25,
+        "damage_multiplier": 1.15,
+        "attack_speed_multiplier": 0.6,
         "angle": 150,
-        "upswing": 0.5,
+        "upswing": 0.4,
         "animation": "bettercombat:two_handed_slam",
         "swing_sound": {
           "id": "bettercombat:claymore_slam",
