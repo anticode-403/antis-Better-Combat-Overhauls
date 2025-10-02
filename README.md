@@ -8,7 +8,6 @@ ABCO is stock full of great features to spice up your Minecraft combat!
 - Some weapons are now _Versatile_, which gives them increased damage, a unique combo, and the ability to special attack.
 - Two-Handed and Versatile weapons now have the ability to special attack.
 - Weapons only attempt to mine if the block being targeted requires that weapon as a tool (axes and wood, swords and cobwebs)
-- Dual-Wielded weapons can now attack individually
 
 # Adding Support
 If your mod uses default Better Combat weapon attributes, then it should support ABCO out of the box! 
