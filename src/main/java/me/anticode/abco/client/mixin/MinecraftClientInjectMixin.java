@@ -4,10 +4,7 @@ import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.anticode.abco.BCOverhauls;
-import me.anticode.abco.api.ABCOPlayerEntity;
-import me.anticode.abco.api.ExpandedAttack;
-import me.anticode.abco.api.ExpandedAttackHand;
-import me.anticode.abco.api.HeavyAttackComboApi;
+import me.anticode.abco.api.*;
 import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
 import me.anticode.abco.network.AbcoPackets;
 import net.bettercombat.BetterCombat;
@@ -30,6 +27,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Hand;
@@ -116,6 +114,18 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
         ClientPlayNetworking.send(AbcoPackets.C2S_PlayerUpdaterRequest.ID, (new AbcoPackets.C2S_PlayerUpdaterRequest(player.getId(), false, 0, animatedHand, animationName, attackCooldownTicksFloat, upswingRate)).write());
         BetterCombatClientEvents.ATTACK_START.invoke((handler) -> handler.onPlayerAttackStart(player, hand));
         ci.cancel();
+    }
+
+    @TargetHandler(
+            mixin = "net.bettercombat.mixin.client.MinecraftClientInject",
+            name = "startUpswing(Lnet/bettercombat/api/WeaponAttributes;)V"
+    )
+    @Redirect(
+            method = "@MixinSquared:Handler",
+            at = @At(value = "INVOKE", target = "Lnet/bettercombat/logic/PlayerAttackHelper;getAttackCooldownTicksCapped(Lnet/minecraft/entity/player/PlayerEntity;)F")
+    )
+    private float redirectAttackSpeedCheck(PlayerEntity player, @Local AttackHand hand) {
+        return ExpandedPlayerAttackHelper.getAttackCooldownTicksCapped(player, hand.attack());
     }
 
     @TargetHandler(
@@ -209,7 +219,7 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             player.stopUsingItem();
             MinecraftClient.class.getDeclaredField("lastAttacked").set(client, 0);
             MinecraftClient.class.getDeclaredField("upswingStack").set(client, player.getMainHandStack());
-            float attackCooldownTicksFloat = PlayerAttackHelper.getAttackCooldownTicksCapped(player) * (float)((double)1.0F / ((ExpandedAttack)(Object)hand.attack()).antisBetterCombatOverhauls$getAttackSpeedMultiplier());
+            float attackCooldownTicksFloat = ExpandedPlayerAttackHelper.getAttackCooldownTicksCapped(player, hand.attack());
             int attackCooldownTicks = Math.round(attackCooldownTicksFloat);
             MinecraftClient.class.getDeclaredField("comboReset").set(client, Math.round(attackCooldownTicksFloat * BetterCombat.config.combo_reset_rate));
             MinecraftClient.class.getDeclaredField("upswingTicks").set(client, Math.max(Math.round(attackCooldownTicksFloat * upswingRate), 1));

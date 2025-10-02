@@ -1,12 +1,15 @@
 package me.anticode.abco.logic;
 
+import me.anticode.abco.api.ExpandedAttack;
 import me.anticode.abco.api.ExpandedAttackHand;
 import me.anticode.abco.api.ExpandedWeaponAttributes;
 import me.anticode.abco.mixin.PlayerAttackHelperMixin;
+import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.ComboState;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.logic.WeaponRegistry;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
@@ -42,6 +45,11 @@ public class ExpandedPlayerAttackHelper {
 
         int index = comboCount % attacks.length;
         return new AttackSelection(attacks[index], new ComboState(index + 1, attacks.length));
+    }
+
+    public static float getAttackCooldownTicksCapped(PlayerEntity player, WeaponAttributes.Attack attack) {
+        ExpandedAttack expandedAttack = (ExpandedAttack)(Object)attack;
+        return Math.max((float)(1D / (player.getAttributeValue(EntityAttributes.GENERIC_ATTACK_SPEED) * expandedAttack.antisBetterCombatOverhauls$getAttackSpeedMultiplier()) * 20D), (float) BetterCombat.config.attack_interval_cap);
     }
 
     private static record AttackSelection(WeaponAttributes.Attack attack, ComboState comboState) {
