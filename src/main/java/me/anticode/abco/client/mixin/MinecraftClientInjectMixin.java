@@ -85,7 +85,7 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             if (player == null) return false;
             ItemStack itemStack = player.getMainHandStack();
             if (itemStack == null) return false;
-            return itemStack.getItem().getMiningSpeedMultiplier(itemStack, target) != 1;
+            return itemStack.getItem().isSuitableFor(target);
         }
         return false;
     }
