@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.anticode.abco.BCOverhauls;
 import me.anticode.abco.api.ABCOPlayerEntity;
+import me.anticode.abco.api.ExpandedAttackHand;
 import me.anticode.abco.api.HeavyAttackComboApi;
 import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
 import me.anticode.abco.network.AbcoPackets;
@@ -21,12 +22,15 @@ import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.client.MinecraftClientAccessor;
 import net.bettercombat.mixin.client.MinecraftClientInject;
+import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import org.jetbrains.annotations.Nullable;
@@ -126,6 +130,22 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
         ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
         assert abcoPlayerEntity != null;
         abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
+    }
+
+    @TargetHandler(
+            mixin = "net.bettercombat.mixin.client.MinecraftClientInject",
+            name = "performAttack()V"
+    )
+    @Redirect(
+            method = "@MixinSquared:Handler",
+            at = @At(value = "INVOKE", target = "Lnet/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking;send(Lnet/minecraft/util/Identifier;Lnet/minecraft/network/PacketByteBuf;)V")
+    )
+    private void serverPacketReplace(Identifier identifier, PacketByteBuf buf, @Local AttackHand attackHand) {
+        ExpandedAttackHand expandedHand = (ExpandedAttackHand)(Object)attackHand;
+        Packets.C2S_AttackRequest attackRequest = Packets.C2S_AttackRequest.read(buf);
+        boolean is_heavy = expandedHand.antisBetterCombatOverhauls$isSpecialAttack();
+        int combo = is_heavy ? heavyCombo : attackRequest.comboCount();
+        ClientPlayNetworking.send(AbcoPackets.C2S_AttackRequest.ID, (new AbcoPackets.C2S_AttackRequest(is_heavy, combo, attackRequest.isSneaking(), attackRequest.selectedSlot(), attackRequest.entityIds()).write()));
     }
 
     @TargetHandler(

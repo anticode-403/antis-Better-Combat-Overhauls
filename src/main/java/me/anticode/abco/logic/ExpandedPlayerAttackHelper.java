@@ -1,13 +1,11 @@
 package me.anticode.abco.logic;
 
-import me.anticode.abco.BCOverhauls;
 import me.anticode.abco.api.ExpandedAttackHand;
 import me.anticode.abco.api.ExpandedWeaponAttributes;
 import me.anticode.abco.mixin.PlayerAttackHelperMixin;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.ComboState;
 import net.bettercombat.api.WeaponAttributes;
-import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.WeaponRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
