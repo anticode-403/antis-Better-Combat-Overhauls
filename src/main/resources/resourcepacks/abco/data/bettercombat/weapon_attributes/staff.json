@@ -3,6 +3,7 @@
     "attack_range": 3,
     "two_handed": true,
     "category": "staff",
+    "critical_multiplier": 1.4,
     "attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",
