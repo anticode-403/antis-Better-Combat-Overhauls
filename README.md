@@ -57,6 +57,8 @@ There's no need to check for ABCO, either. If ABCO is NOT loaded, Better Combat 
 These are a list of planned future features. These features aren't necessarily guaranteed to come to ABCO and there will be no specific release date, but they are intended.
 - Duelist attribute
   - Deflect/parry-oriented weapons. Duelist weapons do not have special attacks.
+- Dual wielded special attacks
+  - Only for two of the same type of weapon
 - Custom heavy attack animations
 - Versatile attack speed
   - Just another lever that can make versatile weapons unique
