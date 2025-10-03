@@ -53,7 +53,7 @@ public abstract class AbstractClientPlayerEntityMixin implements VersatileAnimat
                 return;
             }
             ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
-            if (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && expandedAttributes.antisBetterCombatOverhauls$hasVersatilePose()) {
+            if (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && expandedAttributes.antisBetterCombatOverhauls$hasVersatilePose() && player.getOffHandStack().isEmpty()) {
                 BCOverhauls.LOGGER.debug("Adding versatile pose");
                 if (player.getOffHandStack().isEmpty()) {
                     versatileBodyPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getVersatilePose()), isLeftHanded);
