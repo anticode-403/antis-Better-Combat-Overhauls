@@ -52,3 +52,13 @@ Additionally, ABCO adds new Attack attributes:
 These new attributes are mostly self-explanatory but should be powerful tools for creating unique and interesting attack combos, as well as an engaging gameplay loop. In ABCO's default datapack, most attack combos end in a critical hit.
 
 There's no need to check for ABCO, either. If ABCO is NOT loaded, Better Combat will simply ignore these additional attributes!
+
+# TODO:
+These are a list of planned future features. These features aren't necessarily guaranteed to come to ABCO and there will be no specific release date, but they are intended.
+- Duelist attribute
+  - Deflect/parry-oriented weapons. Duelist weapons do not have special attacks.
+- Custom heavy attack animations
+- Provide weapon attributes for common mods
+- Expanded weapon attributes (attack-specific range, weapon and attack-specific movement speed, etc)
+- Custom scythe animations
+- Bug fixes
