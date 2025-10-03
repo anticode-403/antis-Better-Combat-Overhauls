@@ -58,6 +58,8 @@ These are a list of planned future features. These features aren't necessarily g
 - Duelist attribute
   - Deflect/parry-oriented weapons. Duelist weapons do not have special attacks.
 - Custom heavy attack animations
+- Versatile attack speed
+  - Just another lever that can make versatile weapons unique
 - Provide weapon attributes for common mods
 - Expanded weapon attributes (attack-specific range, weapon and attack-specific movement speed, etc)
 - Custom scythe animations
