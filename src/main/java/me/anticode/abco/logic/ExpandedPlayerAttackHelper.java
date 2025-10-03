@@ -25,6 +25,7 @@ public class ExpandedPlayerAttackHelper {
         if (attributes.isTwoHanded() || (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && player.getOffHandStack().isEmpty())) {
             if (expandedAttributes.antisBetterCombatOverhauls$hasHeavyAttacks()) {
                 AttackSelection attackSelection = selectHeavyAttack(heavyComboCount, attributes, expandedAttributes, player, false);
+                if (attackSelection == null) return null;
                 WeaponAttributes.Attack attack = attackSelection.attack;
                 ComboState combo = attackSelection.comboState;
                 AttackHand attackHand = new AttackHand(attack, combo, false, attributes, itemStack);
@@ -38,6 +39,7 @@ public class ExpandedPlayerAttackHelper {
 
     private static AttackSelection selectHeavyAttack(int comboCount, WeaponAttributes attributes, ExpandedWeaponAttributes expandedAttributes, PlayerEntity player, boolean isOffHandAttack) {
         WeaponAttributes.Attack[] attacks = expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks();
+        if (attacks.length == 0) return null;
         attacks = Arrays.stream(attacks).filter((attack) -> attack.conditions() == null || attack.conditions().length == 0 || PlayerAttackHelperMixin.invokeEvaluateConditions(attack.conditions(), player, isOffHandAttack)).toArray((x$0) -> new WeaponAttributes.Attack[x$0]);
         if (comboCount < 0) {
             comboCount = 0;
