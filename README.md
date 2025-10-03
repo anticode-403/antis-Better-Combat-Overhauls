@@ -53,7 +53,7 @@ These new attributes are mostly self-explanatory but should be powerful tools fo
 
 There's no need to check for ABCO, either. If ABCO is NOT loaded, Better Combat will simply ignore these additional attributes!
 
-# TODO:
+# TODO
 These are a list of planned future features. These features aren't necessarily guaranteed to come to ABCO and there will be no specific release date, but they are intended.
 - Duelist attribute
   - Deflect/parry-oriented weapons. Duelist weapons do not have special attacks.
@@ -63,4 +63,5 @@ These are a list of planned future features. These features aren't necessarily g
 - Provide weapon attributes for common mods
 - Expanded weapon attributes (attack-specific range, weapon and attack-specific movement speed, etc)
 - Custom scythe animations
+- MC 1.21.x and beyond
 - Bug fixes
