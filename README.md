@@ -37,6 +37,8 @@ If not, there's a very simple list of attributes you can add to your weapon attr
 ```
 If versatile is true, your weapon attributes MUST define a valid versatile_attacks. Versatile is a weapon attribute that gives your weapon two different attack attributes based on whether or not you are two-handing your weapon. Versatile damage is _additional_ damage while using versatile and will be shown on the item tooltip.
 
+Despite being an array, `special_attacks` does not currently support more than one attack - although this feature will be coming in the future.
+
 Additionally, ABCO adds new Attack attributes:
 ```JSON5
 {
