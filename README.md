@@ -1,8 +1,6 @@
 # ABCO
 ABCO is a mod designed to add many features to Better Combat necessary to make it a truly engaging combat experience.
 
-As of current, ABCO is **NOT** compatible with BCE (Better Combat Extension) or Spell Engine.
-
 # Core Features
 ABCO is stock full of great features to spice up your Minecraft combat!
 - Critical hits are now dependent on your combo, usually granted by the last hit in the combo.
@@ -11,6 +9,9 @@ ABCO is stock full of great features to spice up your Minecraft combat!
 - Two-Handed and Versatile weapons now have the ability to special attack.
 - Weapons only attempt to mine if the block being targeted requires that weapon as a tool (axes and wood, swords and cobwebs)
 - For mod and datapack developers, an expanded list of attributes for you to use when creating your unique weapon!
+
+# Compatibility
+As of current, ABCO is **NOT** compatible with BCE (Better Combat Extension) or Spell Engine.
 
 # Adding Support
 If your mod uses default Better Combat weapon attributes, then it should support ABCO out of the box!
