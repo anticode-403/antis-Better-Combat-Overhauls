@@ -59,6 +59,9 @@ public abstract class AbstractClientPlayerEntityMixin implements VersatileAnimat
                     versatileBodyPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getVersatilePose()), isLeftHanded);
                     versatileHandPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getVersatilePose()), isLeftHanded);
                 }
+            } else {
+                versatileBodyPose.setPose(null, isLeftHanded);
+                versatileHandPose.setPose(null, isLeftHanded);
             }
         }
     }
