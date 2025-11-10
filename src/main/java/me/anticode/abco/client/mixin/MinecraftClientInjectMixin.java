@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.anticode.abco.BCOverhauls;
 import me.anticode.abco.api.*;
+import me.anticode.abco.client.BCOverhaulsClient;
 import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
 import me.anticode.abco.network.AbcoPackets;
 import net.bettercombat.BetterCombat;
@@ -78,10 +79,10 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             at = @At(value = "RETURN")
     )
     private boolean overrideTargetingMineableBlockAttack(boolean original) {
-        if (original)
+        if (original && BCOverhaulsClient.config.fix_mining_check)
             return targetingMineableBlockTrue();
         else
-            return false;
+            return original;
     }
 
     @Unique
