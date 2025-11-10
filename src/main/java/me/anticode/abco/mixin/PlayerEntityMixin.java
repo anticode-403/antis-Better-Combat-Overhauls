@@ -2,6 +2,7 @@ package me.anticode.abco.mixin;
 
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import me.anticode.abco.BCOverhauls;
 import me.anticode.abco.api.*;
 import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
 import net.bettercombat.api.AttackHand;
@@ -69,13 +70,20 @@ public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttack
     }
 
     @ModifyVariable(method = "attack", at = @At("STORE"), ordinal = 2)
-    private boolean injectNewCritSystem(boolean value) {
+    private boolean injectNewCritSystem(boolean original) {
         PlayerEntity player = (PlayerEntity)(Object)this;
         EntityPlayer_BetterCombat player_bc = (EntityPlayer_BetterCombat)player;
         AttackHand hand = player_bc.getCurrentAttack();
-        if (hand == null) return false;
+        if (BCOverhauls.config.disable_other_criticals)
+            if (hand == null) return false;
+        else if (hand == null) return original;
         ExpandedAttack expandedAttack = (ExpandedAttack)(Object)hand.attack();
-        return expandedAttack.antisBetterCombatOverhauls$getCritical();
+        if (BCOverhauls.config.attack_based_criticals && expandedAttack.antisBetterCombatOverhauls$getCritical()) {
+            return true;
+        }
+        else if (BCOverhauls.config.disable_other_criticals)
+            return false;
+        return original;
     }
 
     @ModifyVariable(method = "attack", at = @At("STORE"), ordinal = 0)
