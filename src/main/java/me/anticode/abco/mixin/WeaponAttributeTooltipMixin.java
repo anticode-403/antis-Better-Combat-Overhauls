@@ -18,14 +18,15 @@ import java.util.List;
 @Mixin(value = WeaponAttributeTooltip.class, remap = false)
 public class WeaponAttributeTooltipMixin {
     @Inject(method = "lambda$initialize$0", at = @At(value = "INVOKE", target = "Ljava/util/List;add(ILjava/lang/Object;)V", ordinal = 0))
-    private static void test(ItemStack itemStack, TooltipContext context, List lines, CallbackInfo ci, @Local WeaponAttributes attributes, @Local(ordinal = 0) int index, @Local(ordinal = 2) int lines2) {
+    private static void test(ItemStack itemStack, TooltipContext context, List lines, CallbackInfo ci, @Local WeaponAttributes attributes, @Local(ordinal = 0) int index, @Local(ordinal = 1) int index2) {
         ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
         if (expandedAttributes.antisBetterCombatOverhauls$getVersatile()) {
             double versatile_damage = expandedAttributes.antisBetterCombatOverhauls$getVersatileDamage();
+
+            lines.add(index2, Text.translatable("weapon_attributes.name.versatile").formatted(Formatting.GRAY));
+
             if (versatile_damage > 0)
                 lines.add(index, Text.literal(" ").append(Text.translatable("attribute.modifier.equals.0", new Object[]{ItemStack.MODIFIER_FORMAT.format(versatile_damage), Text.translatable("weapon_attributes.name.versatile_damage")}).formatted(Formatting.DARK_GREEN)));
-            else
-                lines.add(index, Text.literal(" ").append(Text.translatable("weapon_attributes.name.versatile").formatted(Formatting.DARK_GREEN)));
         }
         double critical_multiplier = expandedAttributes.antisBetterCombatOverhauls$getCriticalMultiplier();
         if (critical_multiplier == 0) critical_multiplier = 1.5F;
