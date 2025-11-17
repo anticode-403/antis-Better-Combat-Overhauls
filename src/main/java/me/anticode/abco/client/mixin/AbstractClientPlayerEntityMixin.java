@@ -40,7 +40,6 @@ public abstract class AbstractClientPlayerEntityMixin implements VersatileAnimat
     public void antisBetterCombatOverhauls$updateVersatilePose() {
         PlayerEntity player = (PlayerEntity)(Object) this;
         boolean isLeftHanded = player.getMainArm() == Arm.LEFT;
-        BCOverhauls.LOGGER.debug("Checking versatile pose!");
         ItemStack itemStack = player.getMainHandStack();
         if (player.handSwinging || player.isSwimming() || player.isUsingItem() || Platform.isCastingSpell(player) || itemStack == null) {
             versatileBodyPose.setPose(null, isLeftHanded);
@@ -54,7 +53,6 @@ public abstract class AbstractClientPlayerEntityMixin implements VersatileAnimat
             }
             ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
             if (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && expandedAttributes.antisBetterCombatOverhauls$hasVersatilePose() && player.getOffHandStack().isEmpty()) {
-                BCOverhauls.LOGGER.debug("Adding versatile pose");
                 if (player.getOffHandStack().isEmpty()) {
                     versatileBodyPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getVersatilePose()), isLeftHanded);
                     versatileHandPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getVersatilePose()), isLeftHanded);
@@ -64,9 +62,5 @@ public abstract class AbstractClientPlayerEntityMixin implements VersatileAnimat
                 versatileHandPose.setPose(null, isLeftHanded);
             }
         }
-    }
-
-    private void addVersatilePose(PoseSubStack instance, KeyframeAnimation animation, boolean isLeftHanded, @Local PlayerEntity player) {
-
     }
 }
