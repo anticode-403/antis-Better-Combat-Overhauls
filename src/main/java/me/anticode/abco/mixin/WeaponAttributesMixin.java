@@ -19,9 +19,13 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
     @Unique
     private double versatile_damage = 0;
     @Unique
-    private @Nullable WeaponAttributes.Attack[] special_attacks;
-    @Unique
     private @Nullable WeaponAttributes.Attack[] versatile_attacks;
+    @Unique
+    private @Nullable Boolean finesse;
+    @Unique
+    private @Nullable Boolean paired;
+    @Unique
+    private @Nullable WeaponAttributes.Attack[] special_attacks;
 
     @Override
     public void antisBetterCombatOverhauls$setVersatile(boolean versatility) {
@@ -62,6 +66,38 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
     @Override
     public double antisBetterCombatOverhauls$getVersatileDamage() {
         return versatile_damage;
+    }
+
+    @Override
+    public boolean antisBetterCombatOverhauls$hasFinesse() {
+        return finesse != null;
+    }
+
+    @Override
+    public void antisBetterCombatOverhauls$setFinesse(boolean finesse) {
+        this.finesse = finesse;
+    }
+
+    @Override
+    public boolean antisBetterCombatOverhauls$getFinesse() {
+        if (finesse == null) return false;
+        return finesse;
+    }
+
+    @Override
+    public boolean antisBetterCombatOverhauls$hasPaired() {
+        return paired != null;
+    }
+
+    @Override
+    public void antisBetterCombatOverhauls$setPaired(boolean paired) {
+        this.paired = paired;
+    }
+
+    @Override
+    public boolean antisBetterCombatOverhauls$getPaired() {
+        if (paired == null) return false;
+        return paired;
     }
 
     @Override

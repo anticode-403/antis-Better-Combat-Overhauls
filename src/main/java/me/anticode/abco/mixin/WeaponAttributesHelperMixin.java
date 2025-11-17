@@ -56,6 +56,20 @@ public abstract class WeaponAttributesHelperMixin {
         else {
             exo.antisBetterCombatOverhauls$setVersatileAttacks(exa.antisBetterCombatOverhauls$getVersatileAttacks());
         }
+        // Finesse
+        if (exb.antisBetterCombatOverhauls$hasFinesse()) {
+            exo.antisBetterCombatOverhauls$setFinesse(exb.antisBetterCombatOverhauls$getFinesse());
+        }
+        else {
+            exo.antisBetterCombatOverhauls$setFinesse(exa.antisBetterCombatOverhauls$getFinesse());
+        }
+        // Paired
+        if (exb.antisBetterCombatOverhauls$hasPaired()) {
+            exo.antisBetterCombatOverhauls$setPaired(exb.antisBetterCombatOverhauls$getPaired());
+        }
+        else {
+            exo.antisBetterCombatOverhauls$setPaired(exa.antisBetterCombatOverhauls$getPaired());
+        }
         // Heavy Attacks
         if (exb.antisBetterCombatOverhauls$hasHeavyAttacks()) {
             exo.antisBetterCombatOverhauls$setHeavyAttacks(exb.antisBetterCombatOverhauls$getHeavyAttacks());
