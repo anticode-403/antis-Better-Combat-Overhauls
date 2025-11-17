@@ -42,9 +42,4 @@ public abstract class PlayerAttackHelperMixin {
             cir.cancel();
         }
     }
-
-    @Invoker("evaluateConditions")
-    public static boolean invokeEvaluateConditions(WeaponAttributes.Condition[] conditions, PlayerEntity player, boolean isOffHandAttack) {
-        throw new AssertionError();
-    }
 }

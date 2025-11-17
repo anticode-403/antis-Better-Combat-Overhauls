@@ -54,6 +54,33 @@
         "swing_sound": {
           "id": "bettercombat:dagger_slash"
         }
+      },
+      {
+        "hitbox": "FORWARD_BOX",
+        "conditions": ["MAIN_HAND_ONLY"],
+        "critical": true,
+        "damage_multiplier": 1.2,
+        "angle": 0,
+        "upswing": 0.5,
+        "animation": "bettercombat:dual_handed_slash_cross",
+        "swing_sound": {
+          "id": "bettercombat:sickle_slash",
+          "pitch": 0.8
+        }
+      },
+      {
+        "hitbox": "FORWARD_BOX",
+        "conditions": ["OFF_HAND_ONLY"],
+        "critical": true,
+        "knockback": 1,
+        "damage_multiplier": 1.3,
+        "angle": 0,
+        "upswing": 0.5,
+        "animation": "bettercombat:dual_handed_slash_uncross",
+        "swing_sound": {
+          "id": "bettercombat:sickle_slash",
+          "pitch": 1.2
+        }
       }
     ]
   }
