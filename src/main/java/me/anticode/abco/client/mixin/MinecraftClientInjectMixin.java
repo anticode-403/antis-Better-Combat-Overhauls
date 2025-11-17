@@ -45,6 +45,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
+
 @Mixin(value = MinecraftClient.class, priority = 1500)
 public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi {
     @Shadow
@@ -218,7 +220,11 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             MinecraftClient client = ((MinecraftClient)(Object)this);
             WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
             ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
-            if (attributes != null && expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() != null && expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length > 0 && ((expandedAttributes.antisBetterCombatOverhauls$getVersatile() && player.getOffHandStack().isEmpty()) || attributes.isTwoHanded())) {
+            if (attributes == null) return;
+            if (expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() == null && expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length != 0) return;
+            if ((expandedAttributes.antisBetterCombatOverhauls$getVersatile() && player.getOffHandStack().isEmpty())
+                    || attributes.isTwoHanded()
+                    || (expandedAttributes.antisBetterCombatOverhauls$getPaired() && WeaponRegistry.getAttributes(player.getOffHandStack()) != null && Objects.equals(WeaponRegistry.getAttributes(player.getOffHandStack()).category(), attributes.category()))) {
                 startHeavyUpswing(attributes);
                 ci.cancel();
             }
@@ -231,9 +237,11 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
         ClientPlayerEntity player = client.player;
         if (player == null) return;
         if (player.isRiding()) return;
+        BCOverhauls.LOGGER.debug("Checking current heavy attack");
         AttackHand hand = ExpandedPlayerAttackHelper.getCurrentHeavyAttack(player, heavyCombo);
         if (hand == null) return;
         float upswingRate = (float)hand.upswingRate();
+        BCOverhauls.LOGGER.debug("Attempting heavy upswing");
         try {
             if (((int)MinecraftClient.class.getDeclaredField("upswingTicks").get(client)) > 0 || attackCooldown > 0 || player.isUsingItem() || player.getAttackCooldownProgress(0) < (1 - upswingRate)) return;
             player.stopUsingItem();

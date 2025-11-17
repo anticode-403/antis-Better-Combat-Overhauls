@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class ExpandedPlayerAttackHelper {
     public static AttackHand getCurrentHeavyAttack(PlayerEntity player, int heavyComboCount) {
@@ -22,7 +23,9 @@ public class ExpandedPlayerAttackHelper {
         WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);
         if (attributes == null) return null;
         ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
-        if (attributes.isTwoHanded() || (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && player.getOffHandStack().isEmpty())) {
+        if (attributes.isTwoHanded()
+                || (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && player.getOffHandStack().isEmpty())
+                || (expandedAttributes.antisBetterCombatOverhauls$getPaired() && WeaponRegistry.getAttributes(player.getOffHandStack()) != null && Objects.equals(WeaponRegistry.getAttributes(player.getOffHandStack()).category(), attributes.category()))) {
             if (expandedAttributes.antisBetterCombatOverhauls$hasHeavyAttacks()) {
                 AttackSelection attackSelection = selectHeavyAttack(heavyComboCount, attributes, expandedAttributes, player, false);
                 if (attackSelection == null) return null;

@@ -2,5 +2,7 @@
   "pack.abco.abco": "ABCO: Better Combat Overhauls Default",
   "weapon_attributes.name.critical_multiplier": "Critical Multiplier",
   "weapon_attributes.name.versatile": "Versatile",
-  "weapon_attributes.name.versatile_damage": "Versatile Damage"
+  "weapon_attributes.name.versatile_damage": "Versatile Damage",
+  "weapon_attributes.name.finesse": "Finesse",
+  "weapon_attributes.name.paired": "Paired"
 }

@@ -2,6 +2,7 @@
   "attributes": {
     "attack_range": 2,
     "two_handed": false,
+    "paired": true,
     "category": "dagger",
     "critical_multiplier": 1.7,
     "attacks": [
@@ -29,6 +30,21 @@
       {
         "conditions": ["DUAL_WIELDING_SAME_CATEGORY", "MAIN_HAND_ONLY"],
         "hitbox": "FORWARD_BOX",
+        "critical": true,
+        "knockback": 1,
+        "damage_multiplier": 1.4,
+        "angle": 150,
+        "upswing": 0.5,
+        "animation": "bettercombat:dual_handed_stab",
+        "swing_sound": {
+          "id": "bettercombat:dagger_slash"
+        }
+      }
+    ],
+    "special_attacks": [
+      {
+        "hitbox": "FORWARD_BOX",
+        "conditions": ["MAIN_HAND_ONLY"],
         "critical": true,
         "knockback": 1,
         "damage_multiplier": 1.4,
