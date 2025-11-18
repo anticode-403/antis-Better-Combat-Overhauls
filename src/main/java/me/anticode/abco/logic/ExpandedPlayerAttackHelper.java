@@ -1,10 +1,8 @@
 package me.anticode.abco.logic;
 
-import me.anticode.abco.BCOverhauls;
 import me.anticode.abco.api.ExpandedAttack;
 import me.anticode.abco.api.ExpandedAttackHand;
 import me.anticode.abco.api.ExpandedWeaponAttributes;
-import me.anticode.abco.mixin.PlayerAttackHelperMixin;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.ComboState;
@@ -27,8 +25,7 @@ public class ExpandedPlayerAttackHelper {
         if (attributes == null) return null;
         ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
         if (attributes.isTwoHanded()
-                || (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && player.getOffHandStack().isEmpty())
-                || (expandedAttributes.antisBetterCombatOverhauls$getPaired() && WeaponRegistry.getAttributes(player.getOffHandStack()) != null && Objects.equals(WeaponRegistry.getAttributes(player.getOffHandStack()).category(), attributes.category()))) {
+                || (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && player.getOffHandStack().isEmpty())) {
             if (expandedAttributes.antisBetterCombatOverhauls$hasHeavyAttacks()) {
                 AttackSelection attackSelection = selectHeavyAttack(heavyComboCount, attributes, expandedAttributes, player, false);
                 if (attackSelection == null) return null;
@@ -40,6 +37,17 @@ public class ExpandedPlayerAttackHelper {
                 return attackHand;
             }
         }
+        else if ((expandedAttributes.antisBetterCombatOverhauls$getPaired() && WeaponRegistry.getAttributes(player.getOffHandStack()) != null && Objects.equals(WeaponRegistry.getAttributes(player.getOffHandStack()).category(), attributes.category()))) {
+            boolean isOffHand = PlayerAttackHelper.shouldAttackWithOffHand(player, heavyComboCount);
+            itemStack = isOffHand ? player.getOffHandStack() : player.getMainHandStack();
+            if (attributes != null && attributes.attacks() != null) {
+                int handSpecificComboCount = (isOffHand && heavyComboCount > 0 ? heavyComboCount - 1 : heavyComboCount) / 2;
+                AttackSelection attackSelection = selectHeavyAttack(handSpecificComboCount, attributes, expandedAttributes, player, isOffHand);
+                WeaponAttributes.Attack attack = attackSelection.attack;
+                ComboState combo = attackSelection.comboState;
+                return new AttackHand(attack, combo, isOffHand, attributes, itemStack);
+            }
+        }
         return null;
     }
 
@@ -47,14 +55,11 @@ public class ExpandedPlayerAttackHelper {
         WeaponAttributes.Attack[] attacks = expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks();
         if (attacks.length == 0) return null;
         attacks = Arrays.stream(attacks).filter((attack) -> {
-            BCOverhauls.LOGGER.debug("Filtering attacks");
             if (attack.conditions() != null && attack.conditions().length != 0) {
-                BCOverhauls.LOGGER.debug("evaluating conditions");
                 return evaluateConditions(attack.conditions(), player, isOffHandAttack);
             }
             return true;
         }).toArray(WeaponAttributes.Attack[]::new);
-        BCOverhauls.LOGGER.debug("Combo count thing");
         if (comboCount < 0) {
             comboCount = 0;
         }
@@ -71,6 +76,11 @@ public class ExpandedPlayerAttackHelper {
     private static record AttackSelection(WeaponAttributes.Attack attack, ComboState comboState) {
     }
 
+    /*
+     * For some reason, I couldn't get an invoker for these functions in PlayerAttackHelper, so we have to do the clunky
+     * thing of copying them directly. I don't like this solution, but unless someone can figure out a better way this
+     * is what we have to work with.
+     */
     private static boolean evaluateConditions(WeaponAttributes.Condition[] conditions, PlayerEntity player, boolean isOffHandAttack) {
         return Arrays.stream(conditions).allMatch((condition) -> evaluateCondition(condition, player, isOffHandAttack));
     }
