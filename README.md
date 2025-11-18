@@ -57,13 +57,10 @@ There's no need to check for ABCO, either. If ABCO is NOT loaded, Better Combat 
 These are a list of planned future features. These features aren't necessarily guaranteed to come to ABCO and there will be no specific release date, but they are intended.
 - Duelist attribute
   - Deflect/parry-oriented weapons. Duelist weapons do not have special attacks.
-- Dual wielded special attacks
-  - Only for two of the same type of weapon
-- Custom heavy attack animations
+- Support for Malfu Combat Animation
 - Versatile attack speed
   - Just another lever that can make versatile weapons unique
 - Provide weapon attributes for common mods
 - Expanded weapon attributes (attack-specific range, weapon and attack-specific movement speed, etc)
-- Custom scythe animations
 - MC 1.21.x and beyond
 - Bug fixes
