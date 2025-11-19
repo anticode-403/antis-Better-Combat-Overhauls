@@ -6,7 +6,9 @@ ABCO is stock full of great features to spice up your Minecraft combat!
 - Critical hits are now dependent on your combo, usually granted by the last hit in the combo.
 - Critical damage is now weapon dependent, with higher attack speed weapons giving the biggest benefit.
 - Some weapons are now _Versatile_, which gives them increased damage, a unique combo, and the ability to special attack.
-- Two-Handed and Versatile weapons now have the ability to special attack.
+- Some weapons are now _Paired_, which gives them special attacks while dual-wielded.
+- Some weapons are now _Finesse_, which replaces their special attacks with a parry mechanic.
+- Two-Handed, Paired, and Versatile weapons now have the ability to special attack.
 - Weapons only attempt to mine if the block being targeted requires that weapon as a tool (axes and wood, swords and cobwebs)
 - For mod and datapack developers, an expanded list of attributes for you to use when creating your unique weapon!
 
@@ -24,6 +26,8 @@ If not, there's a very simple list of attributes you can add to your weapon attr
   "attributes": {
     // ...
     "critical_multiplier": 1.5,
+    "paired": false,
+    "finesse": false,
     "versatile": false,
     "versatile_damage": 0.0,
     "versatile_pose": "",
@@ -36,9 +40,13 @@ If not, there's a very simple list of attributes you can add to your weapon attr
   },
 }
 ```
-If versatile is true, your weapon attributes MUST define a valid versatile_attacks. Versatile is a weapon attribute that gives your weapon two different attack attributes based on whether or not you are two-handing your weapon. Versatile damage is _additional_ damage while using versatile and will be shown on the item tooltip.
+If `versatile` is true, your weapon attributes MUST define a valid `versatile_attacks`. Versatile is a weapon attribute that gives your weapon two different attack attributes based on whether you are two-handing your weapon. Versatile damage is _additional_ damage while using versatile and will be shown on the item tooltip.
 
-Despite being an array, `special_attacks` does not currently support more than one attack - although this feature will be coming in the future.
+If `paired` is true, your weapon will get special attacks while it is being dual-wielded with a weapon of the same type.
+
+If `finesse` is true, instead of getting a special attack, your weapon will parry on interact.
+
+Versatile, Paired, and Two-Handed are all _incompatible_ with each other. Finesse is compatible with all of them, however Versatile Finesse is unnecessary.
 
 Additionally, ABCO adds new Attack attributes:
 ```JSON5
@@ -55,8 +63,8 @@ There's no need to check for ABCO, either. If ABCO is NOT loaded, Better Combat 
 
 # TODO
 These are a list of planned future features. These features aren't necessarily guaranteed to come to ABCO and there will be no specific release date, but they are intended.
-- Duelist attribute
-  - Deflect/parry-oriented weapons. Duelist weapons do not have special attacks.
+- Finesse attribute
+  - Deflect/parry-oriented weapons. Finesse weapons do not have special attacks.
 - Support for Malfu Combat Animation
 - Versatile attack speed
   - Just another lever that can make versatile weapons unique
