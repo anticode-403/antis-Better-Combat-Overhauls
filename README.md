@@ -44,7 +44,7 @@ If `versatile` is true, your weapon attributes MUST define a valid `versatile_at
 
 If `paired` is true, your weapon will get special attacks while it is being dual-wielded with a weapon of the same type.
 
-If `finesse` is true, instead of getting a special attack, your weapon will parry on interact.
+If `finesse` is true, instead of getting a special attack, your weapon will parry on interact. (Not implemented)
 
 Versatile, Paired, and Two-Handed are all _incompatible_ with each other. Finesse is compatible with all of them, however Versatile Finesse is unnecessary.
 
