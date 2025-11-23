@@ -15,6 +15,7 @@
       },
       {
         "hitbox": "HORIZONTAL_PLANE",
+        "critical": true,
         "angle": 90,
         "upswing": 0.5,
         "animation": "bettercombat:one_handed_slash_horizontal_left",
