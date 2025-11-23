@@ -49,7 +49,7 @@
         "damage_multiplier": 1.2,
         "attack_speed_multiplier": 0.4,
         "angle": 0,
-        "upswing": 0.9,
+        "upswing": 0.5,
         "animation": "bettercombat:dual_handed_slash_cross",
         "swing_sound": {
           "id": "bettercombat:dagger_slash",
