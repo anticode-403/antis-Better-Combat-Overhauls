@@ -77,14 +77,14 @@
     ],
     "special_attacks": [
       {
-        "hitbox": "VERTICAL_PLANE",
+        "hitbox": "HORIZONTAL_PLANE",
         "damage_multiplier": 1.2,
         "critical": true,
         "knockback": 2,
         "attack_speed_multiplier": 0.4,
         "angle": 150,
-        "upswing": 0.5,
-        "animation": "bettercombat:two_handed_slam",
+        "upswing": 0.68,
+        "animation": "abco:onehanded_spin_attack",
         "swing_sound": {
           "id": "bettercombat:pickaxe_swing"
         }
