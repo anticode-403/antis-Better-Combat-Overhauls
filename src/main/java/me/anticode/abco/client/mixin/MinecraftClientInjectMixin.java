@@ -231,12 +231,12 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
             ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
             if (attributes == null) return;
-            if (expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() == null && expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length != 0) return;
             if ((expandedAttributes.antisBetterCombatOverhauls$getVersatile() && player.getOffHandStack().isEmpty())
                     || attributes.isTwoHanded()
                     || (expandedAttributes.antisBetterCombatOverhauls$getPaired() && WeaponRegistry.getAttributes(player.getOffHandStack()) != null && Objects.equals(WeaponRegistry.getAttributes(player.getOffHandStack()).category(), attributes.category()))) {
                 if (expandedAttributes.antisBetterCombatOverhauls$getFinesse())
                     startFinesseParry(attributes, expandedAttributes);
+                else if (expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() == null && expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length != 0) return;
                 else
                     startHeavyUpswing(attributes);
                 ci.cancel();
@@ -254,6 +254,14 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             if (((int)MinecraftClient.class.getDeclaredField("upswingTicks").get(client)) > 0 || attackCooldown > 0 || player.isUsingItem()) return;
             player.stopUsingItem();
             MinecraftClient.class.getDeclaredField("lastAttacked").set(client, 0);
+            MinecraftClient.class.getDeclaredField("upswingStack").set(client, player.getMainHandStack());
+            float attackCooldownTicksFloat = 100;
+            int attackCooldownTicks = Math.round(attackCooldownTicksFloat);
+            heavyComboReset = Math.round(attackCooldownTicksFloat * BetterCombat.config.combo_reset_rate);
+            MinecraftClient.class.getDeclaredField("upswingTicks").set(client, Math.max(Math.round(attackCooldownTicksFloat), 1));
+            MinecraftClient.class.getDeclaredField("lastSwingDuration").set(client, attackCooldownTicksFloat);
+            itemUseCooldown = attackCooldownTicks;
+            ((MinecraftClientAccessor)client).setAttackCooldown(attackCooldownTicks);
         } catch (Throwable throwable) {
             BCOverhauls.LOGGER.error(throwable.getMessage(), throwable);
         }

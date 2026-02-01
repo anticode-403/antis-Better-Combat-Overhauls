@@ -2,6 +2,8 @@
   "attributes": {
     "attack_range": 2.5,
     "category": "sickle",
+    "paired": true,
+    "finesse": true,
     "critical_multiplier": 1.5,
     "attacks": [
       {
