@@ -29,8 +29,8 @@ If not, there's a very simple list of attributes you can add to your weapon attr
     "paired": false,
     "finesse": false,
     "versatile": false,
+    "alternate_pose": "",
     "versatile_damage": 0.0,
-    "versatile_pose": "",
     "versatile_attacks": [
       // ...
     ],

@@ -1,13 +1,9 @@
 package me.anticode.abco.client.mixin;
 
-import com.bawnorton.mixinsquared.TargetHandler;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.GameProfile;
 import dev.kosmx.playerAnim.api.layered.AnimationStack;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
-import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
-import me.anticode.abco.BCOverhauls;
 import me.anticode.abco.api.ExpandedWeaponAttributes;
 import me.anticode.abco.api.VersatileAnimatedPlayer;
 import net.bettercombat.Platform;
@@ -27,39 +23,39 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = AbstractClientPlayerEntity.class, priority = 1500)
 public abstract class AbstractClientPlayerEntityMixin implements VersatileAnimatedPlayer {
-    private final PoseSubStack versatileBodyPose = new PoseSubStack((AbstractModifier) null, true, true);
-    private final PoseSubStack versatileHandPose = new PoseSubStack((AbstractModifier) null, false, true);
+    private final PoseSubStack alternateBodyPose = new PoseSubStack((AbstractModifier) null, true, true);
+    private final PoseSubStack alternateHandPose = new PoseSubStack((AbstractModifier) null, false, true);
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void addVersatilePoseStacks(ClientWorld world, GameProfile profile, CallbackInfo ci) {
+    private void addAlternatePoseStacks(ClientWorld world, GameProfile profile, CallbackInfo ci) {
         AnimationStack stack = ((IAnimatedPlayer)this).getAnimationStack();
-        stack.addAnimLayer(5, versatileHandPose.base);
-        stack.addAnimLayer(6, versatileBodyPose.base);
+        stack.addAnimLayer(5, alternateHandPose.base);
+        stack.addAnimLayer(6, alternateBodyPose.base);
     }
 
-    public void antisBetterCombatOverhauls$updateVersatilePose() {
+    public void antisBetterCombatOverhauls$updateAlternatePose() {
         PlayerEntity player = (PlayerEntity)(Object) this;
         boolean isLeftHanded = player.getMainArm() == Arm.LEFT;
         ItemStack itemStack = player.getMainHandStack();
         if (player.handSwinging || player.isSwimming() || player.isUsingItem() || Platform.isCastingSpell(player) || itemStack == null) {
-            versatileBodyPose.setPose(null, isLeftHanded);
-            versatileHandPose.setPose(null, isLeftHanded);
+            alternateBodyPose.setPose(null, isLeftHanded);
+            alternateHandPose.setPose(null, isLeftHanded);
         } else {
             WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);
             if (attributes == null) {
-                versatileBodyPose.setPose(null, isLeftHanded);
-                versatileHandPose.setPose(null, isLeftHanded);
+                alternateBodyPose.setPose(null, isLeftHanded);
+                alternateHandPose.setPose(null, isLeftHanded);
                 return;
             }
             ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
-            if (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && expandedAttributes.antisBetterCombatOverhauls$hasVersatilePose() && player.getOffHandStack().isEmpty()) {
+            if (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && expandedAttributes.antisBetterCombatOverhauls$hasAlternatePose() && player.getOffHandStack().isEmpty()) {
                 if (player.getOffHandStack().isEmpty()) {
-                    versatileBodyPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getVersatilePose()), isLeftHanded);
-                    versatileHandPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getVersatilePose()), isLeftHanded);
+                    alternateBodyPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getAlternatePose()), isLeftHanded);
+                    alternateHandPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getAlternatePose()), isLeftHanded);
                 }
             } else {
-                versatileBodyPose.setPose(null, isLeftHanded);
-                versatileHandPose.setPose(null, isLeftHanded);
+                alternateBodyPose.setPose(null, isLeftHanded);
+                alternateHandPose.setPose(null, isLeftHanded);
             }
         }
     }

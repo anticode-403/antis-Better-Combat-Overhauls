@@ -39,7 +39,7 @@
     ],
     "versatile": true,
     "versatile_damage": 1,
-    "versatile_pose": "bettercombat:pose_two_handed_heavy",
+    "alternate_pose": "bettercombat:pose_two_handed_heavy",
     "versatile_attacks": [
       {
         "hitbox": "HORIZONTAL_PLANE",

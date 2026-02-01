@@ -11,11 +11,11 @@ public interface ExpandedWeaponAttributes {
     boolean antisBetterCombatOverhauls$hasVersatile();
 
     // Versatile Pose
-    String antisBetterCombatOverhauls$getVersatilePose();
+    String antisBetterCombatOverhauls$getAlternatePose();
 
-    void antisBetterCombatOverhauls$setVersatilePose(String pose);
+    void antisBetterCombatOverhauls$setAlternatePose(String pose);
 
-    boolean antisBetterCombatOverhauls$hasVersatilePose();
+    boolean antisBetterCombatOverhauls$hasAlternatePose();
 
     // Versatile Damage
     double antisBetterCombatOverhauls$getVersatileDamage();

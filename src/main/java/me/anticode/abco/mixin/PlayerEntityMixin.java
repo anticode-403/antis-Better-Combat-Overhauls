@@ -111,7 +111,7 @@ public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttack
     private void postTick(CallbackInfo ci) {
         PlayerEntity player = (PlayerEntity)(Object)this;
         if (player.getWorld().isClient()) {
-            ((VersatileAnimatedPlayer)player).antisBetterCombatOverhauls$updateVersatilePose();
+            ((VersatileAnimatedPlayer)player).antisBetterCombatOverhauls$updateAlternatePose();
         }
     }
 }
