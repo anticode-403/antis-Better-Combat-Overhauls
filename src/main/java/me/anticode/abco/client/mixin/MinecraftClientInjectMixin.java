@@ -233,7 +233,8 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             if (attributes == null) return;
             if ((expandedAttributes.antisBetterCombatOverhauls$getVersatile() && player.getOffHandStack().isEmpty())
                     || attributes.isTwoHanded()
-                    || (expandedAttributes.antisBetterCombatOverhauls$getPaired() && WeaponRegistry.getAttributes(player.getOffHandStack()) != null && Objects.equals(WeaponRegistry.getAttributes(player.getOffHandStack()).category(), attributes.category()))) {
+                    || (expandedAttributes.antisBetterCombatOverhauls$getPaired() && WeaponRegistry.getAttributes(player.getOffHandStack()) != null && Objects.equals(WeaponRegistry.getAttributes(player.getOffHandStack()).category(), attributes.category()))
+                    || (expandedAttributes.antisBetterCombatOverhauls$getFinesse() && player.getOffHandStack().isEmpty())) {
                 if (expandedAttributes.antisBetterCombatOverhauls$getFinesse())
                     startFinesseParry(attributes, expandedAttributes);
                 else if (expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() == null && expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length != 0) return;
