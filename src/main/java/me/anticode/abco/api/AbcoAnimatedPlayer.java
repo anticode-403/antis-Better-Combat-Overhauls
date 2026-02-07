@@ -1,5 +1,5 @@
 package me.anticode.abco.api;
 
-public interface VersatileAnimatedPlayer {
+public interface AbcoAnimatedPlayer {
     void antisBetterCombatOverhauls$updateAlternatePose();
 }

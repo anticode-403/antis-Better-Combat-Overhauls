@@ -64,7 +64,6 @@ public class AbcoServerNetwork {
                     var10000.error("Combo count: " + var10001 + " is dual wielding: " + PlayerAttackHelper.isDualWielding(player));
                     BCOverhauls.LOGGER.error("Main-hand stack: " + player.getMainHandStack());
                     BCOverhauls.LOGGER.error("Off-hand stack: " + player.getOffHandStack());
-                    var10000 = BCOverhauls.LOGGER;
                     var10001 = player.getInventory().selectedSlot;
                     var10000.error("Selected slot server: " + var10001 + " | client: " + request.selectedSlot());
                 } else {

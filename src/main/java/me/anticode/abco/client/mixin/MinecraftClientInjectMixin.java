@@ -10,7 +10,6 @@ import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
 import me.anticode.abco.network.AbcoPackets;
 import net.bettercombat.BetterCombat;
 import net.bettercombat.api.AttackHand;
-import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.api.client.BetterCombatClientEvents;
 import net.bettercombat.client.BetterCombatClient;
@@ -20,18 +19,15 @@ import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;
 import net.bettercombat.mixin.client.MinecraftClientAccessor;
-import net.bettercombat.mixin.client.MinecraftClientInject;
 import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -43,7 +39,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
@@ -235,9 +230,11 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
                     || attributes.isTwoHanded()
                     || (expandedAttributes.antisBetterCombatOverhauls$getPaired() && WeaponRegistry.getAttributes(player.getOffHandStack()) != null && Objects.equals(WeaponRegistry.getAttributes(player.getOffHandStack()).category(), attributes.category()))
                     || (expandedAttributes.antisBetterCombatOverhauls$getFinesse() && player.getOffHandStack().isEmpty())) {
-                if (expandedAttributes.antisBetterCombatOverhauls$getFinesse())
+                if (expandedAttributes.antisBetterCombatOverhauls$getFinesse()) {
+                    if (!expandedAttributes.antisBetterCombatOverhauls$hasParryPose()) ci.cancel();
                     startFinesseParry(attributes, expandedAttributes);
-                else if (expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() == null && expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length != 0) return;
+                }
+                else if (expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() == null && expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length != 0) ci.cancel();
                 else
                     startHeavyUpswing(attributes);
                 ci.cancel();
@@ -256,13 +253,14 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             player.stopUsingItem();
             MinecraftClient.class.getDeclaredField("lastAttacked").set(client, 0);
             MinecraftClient.class.getDeclaredField("upswingStack").set(client, player.getMainHandStack());
-            float attackCooldownTicksFloat = 100;
-            int attackCooldownTicks = Math.round(attackCooldownTicksFloat);
-            heavyComboReset = Math.round(attackCooldownTicksFloat * BetterCombat.config.combo_reset_rate);
-            MinecraftClient.class.getDeclaredField("upswingTicks").set(client, Math.max(Math.round(attackCooldownTicksFloat), 1));
-            MinecraftClient.class.getDeclaredField("lastSwingDuration").set(client, attackCooldownTicksFloat);
+            int attackCooldownTicks = expandedWeaponAttributes.antisBetterCombatOverhauls$getParryDuration() + expandedWeaponAttributes.antisBetterCombatOverhauls$getParryPunishment();
+            heavyComboReset = Math.round(attackCooldownTicks * BetterCombat.config.combo_reset_rate);
+            MinecraftClient.class.getDeclaredField("lastSwingDuration").set(client, attackCooldownTicks);
             itemUseCooldown = attackCooldownTicks;
             ((MinecraftClientAccessor)client).setAttackCooldown(attackCooldownTicks);
+            // Mark player as parrying in PlayerEntityMixin.
+            ((AbcoAnimatedPlayer)player).antisBetterCombatOverhauls$updateAlternatePose();
+            ClientPlayNetworking.send(AbcoPackets.C2S_ParryRequest.ID, new AbcoPackets.C2S_ParryRequest(player.getId(), expandedWeaponAttributes.antisBetterCombatOverhauls$getParryPose(), expandedWeaponAttributes.antisBetterCombatOverhauls$getParryDuration()).write());
         } catch (Throwable throwable) {
             BCOverhauls.LOGGER.error(throwable.getMessage(), throwable);
         }

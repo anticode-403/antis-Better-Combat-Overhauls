@@ -2,7 +2,6 @@ package me.anticode.abco.network;
 
 import me.anticode.abco.BCOverhauls;
 import net.bettercombat.logic.AnimatedHand;
-import net.bettercombat.network.Packets;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
@@ -11,7 +10,7 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 
 public class AbcoPackets {
-    public static record C2S_AttackRequest (boolean heavy, int comboCount, boolean isSneaking, int selectedSlot, int[] entityIds) {
+    public record C2S_AttackRequest (boolean heavy, int comboCount, boolean isSneaking, int selectedSlot, int[] entityIds) {
         public static Identifier ID = new Identifier(BCOverhauls.modID, "request_attack");
 
         private static int[] convertEntityList(List<Entity> entities) {
@@ -68,6 +67,25 @@ public class AbcoPackets {
             float length = buffer.readFloat();
             float upswing = buffer.readFloat();
             return new C2S_PlayerUpdaterRequest(playerId, heavyAttack, comboCount, animatedHand, animationName, length, upswing);
+        }
+    }
+
+    public record C2S_ParryRequest (int playerId, String animationName, float length) {
+        public static Identifier ID = new Identifier(BCOverhauls.modID, "parry_request");
+
+        public PacketByteBuf write() {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeInt(playerId);
+            buffer.writeString(animationName);
+            buffer.writeFloat(length);
+            return buffer;
+        }
+
+        public static C2S_ParryRequest read(PacketByteBuf buffer) {
+            int playerId = buffer.readInt();
+            String animationName = buffer.readString();
+            float length = buffer.readFloat();
+            return new C2S_ParryRequest(playerId, animationName, length);
         }
     }
 }

@@ -30,6 +30,10 @@ If not, there's a very simple list of attributes you can add to your weapon attr
     "finesse": false,
     "versatile": false,
     "alternate_pose": "",
+    "parry_pose": "",
+    "parry_duration": 15,
+    "parry_punishment": 20,
+    "parry_resistance": 1.0,
     "versatile_damage": 0.0,
     "versatile_attacks": [
       // ...
@@ -44,7 +48,7 @@ If `versatile` is true, your weapon attributes MUST define a valid `versatile_at
 
 If `paired` is true, your weapon will get special attacks while it is being dual-wielded with a weapon of the same type.
 
-If `finesse` is true, instead of getting a special attack, your weapon will parry on interact. (Not implemented)
+If `finesse` is true, your weapon attributes MUST define a valid `parry_pose`. Finesse is a weapon attribute that replaces your special attack with a parry on interact. `parry_punishment` is the cooldown your weapon suffers if you fail to block any damage during the parry duration. `parry_resistance` (0-1) is the percentage damage resistance you are granted while blocking.
 
 Versatile, Paired, and Two-Handed are all _incompatible_ with each other. Finesse is compatible with all of them, however Versatile Finesse is unnecessary.
 
@@ -53,7 +57,7 @@ Additionally, ABCO adds new Attack attributes:
 {
   // ...
   "critical": false,
-  "knockback": 0,
+  "knockback_multiplier": 1.0,
   "attack_speed_multiplier": 1.0,
 }
 ```

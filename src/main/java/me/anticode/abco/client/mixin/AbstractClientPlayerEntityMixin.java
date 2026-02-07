@@ -5,7 +5,7 @@ import dev.kosmx.playerAnim.api.layered.AnimationStack;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import me.anticode.abco.api.ExpandedWeaponAttributes;
-import me.anticode.abco.api.VersatileAnimatedPlayer;
+import me.anticode.abco.api.AbcoAnimatedPlayer;
 import net.bettercombat.Platform;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.client.animation.AnimationRegistry;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = AbstractClientPlayerEntity.class, priority = 1500)
-public abstract class AbstractClientPlayerEntityMixin implements VersatileAnimatedPlayer {
+public abstract class AbstractClientPlayerEntityMixin implements AbcoAnimatedPlayer {
     private final PoseSubStack alternateBodyPose = new PoseSubStack((AbstractModifier) null, true, true);
     private final PoseSubStack alternateHandPose = new PoseSubStack((AbstractModifier) null, false, true);
 
@@ -40,23 +40,23 @@ public abstract class AbstractClientPlayerEntityMixin implements VersatileAnimat
         if (player.handSwinging || player.isSwimming() || player.isUsingItem() || Platform.isCastingSpell(player) || itemStack == null) {
             alternateBodyPose.setPose(null, isLeftHanded);
             alternateHandPose.setPose(null, isLeftHanded);
+            return;
+        }
+        WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);
+        if (attributes == null) {
+            alternateBodyPose.setPose(null, isLeftHanded);
+            alternateHandPose.setPose(null, isLeftHanded);
+            return;
+        }
+        ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
+        if (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && expandedAttributes.antisBetterCombatOverhauls$hasAlternatePose() && player.getOffHandStack().isEmpty()) {
+            if (player.getOffHandStack().isEmpty()) {
+                alternateBodyPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getAlternatePose()), isLeftHanded);
+                alternateHandPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getAlternatePose()), isLeftHanded);
+            }
         } else {
-            WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);
-            if (attributes == null) {
-                alternateBodyPose.setPose(null, isLeftHanded);
-                alternateHandPose.setPose(null, isLeftHanded);
-                return;
-            }
-            ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
-            if (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && expandedAttributes.antisBetterCombatOverhauls$hasAlternatePose() && player.getOffHandStack().isEmpty()) {
-                if (player.getOffHandStack().isEmpty()) {
-                    alternateBodyPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getAlternatePose()), isLeftHanded);
-                    alternateHandPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getAlternatePose()), isLeftHanded);
-                }
-            } else {
-                alternateBodyPose.setPose(null, isLeftHanded);
-                alternateHandPose.setPose(null, isLeftHanded);
-            }
+            alternateBodyPose.setPose(null, isLeftHanded);
+            alternateHandPose.setPose(null, isLeftHanded);
         }
     }
 }

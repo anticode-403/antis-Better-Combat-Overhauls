@@ -24,6 +24,15 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
     private @Nullable Boolean paired;
     @Unique
     private @Nullable WeaponAttributes.Attack[] special_attacks;
+    @Unique
+    private @Nullable String parry_pose;
+    @Unique
+    private double parry_resistance = 0;
+    @Unique
+    private int parry_duration = -1;
+    @Unique
+    private int parry_punishment = -1;
+
 
     @Override
     public void antisBetterCombatOverhauls$setVersatile(boolean versatility) {
@@ -136,5 +145,53 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
     @Override
     public boolean antisBetterCombatOverhauls$hasHeavyAttacks() {
         return special_attacks != null;
+    }
+
+    @Override
+    public double antisBetterCombatOverhauls$getParryResistance() {
+        if (parry_resistance == 0) return 1;
+        return parry_resistance;
+    }
+
+    @Override
+    public void antisBetterCombatOverhauls$setParryResistance(double resistance) {
+        this.parry_resistance = resistance;
+    }
+
+    @Override
+    public int antisBetterCombatOverhauls$getParryDuration() {
+        if (parry_duration == -1) return 15;
+        return parry_duration;
+    }
+
+    @Override
+    public void antisBetterCombatOverhauls$setParryDuration(int duration) {
+        this.parry_duration = duration;
+    }
+
+    @Override
+    public int antisBetterCombatOverhauls$getParryPunishment() {
+        if (parry_punishment == -1) return 20;
+        return parry_punishment;
+    }
+
+    @Override
+    public void antisBetterCombatOverhauls$setParryPunishment(int duration) {
+        this.parry_punishment = duration;
+    }
+
+    @Override
+    public boolean antisBetterCombatOverhauls$hasParryPose() {
+        return parry_pose != null && !parry_pose.isEmpty();
+    }
+
+    @Override
+    public String antisBetterCombatOverhauls$getParryPose() {
+        return parry_pose;
+    }
+
+    @Override
+    public void antisBetterCombatOverhauls$setParryPose(String pose) {
+        parry_pose = pose;
     }
 }

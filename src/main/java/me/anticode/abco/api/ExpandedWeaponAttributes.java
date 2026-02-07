@@ -54,4 +54,26 @@ public interface ExpandedWeaponAttributes {
     WeaponAttributes.Attack[] antisBetterCombatOverhauls$getHeavyAttacks();
 
     boolean antisBetterCombatOverhauls$hasHeavyAttacks();
+
+    // Parry Pose
+    boolean antisBetterCombatOverhauls$hasParryPose();
+
+    String antisBetterCombatOverhauls$getParryPose();
+
+    void antisBetterCombatOverhauls$setParryPose(String pose);
+
+    // Parry Resistance
+    double antisBetterCombatOverhauls$getParryResistance();
+
+    void antisBetterCombatOverhauls$setParryResistance(double resistance);
+
+    // Parry Duration
+    int antisBetterCombatOverhauls$getParryDuration();
+
+    void antisBetterCombatOverhauls$setParryDuration(int duration);
+
+    // Parry Duration
+    int antisBetterCombatOverhauls$getParryPunishment();
+
+    void antisBetterCombatOverhauls$setParryPunishment(int duration);
 }

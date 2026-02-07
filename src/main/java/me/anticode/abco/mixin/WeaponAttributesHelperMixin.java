@@ -35,7 +35,7 @@ public abstract class WeaponAttributesHelperMixin {
         else {
             exo.antisBetterCombatOverhauls$setVersatile(exa.antisBetterCombatOverhauls$getVersatile());
         }
-        // Versatile Pose
+        // Alternate Pose
         if (exb.antisBetterCombatOverhauls$hasAlternatePose()) {
             exo.antisBetterCombatOverhauls$setAlternatePose(exb.antisBetterCombatOverhauls$getAlternatePose());
         }
@@ -76,6 +76,27 @@ public abstract class WeaponAttributesHelperMixin {
         }
         else {
             exo.antisBetterCombatOverhauls$setHeavyAttacks(exa.antisBetterCombatOverhauls$getHeavyAttacks());
+        }
+        // Parry Resistance
+        if (exb.antisBetterCombatOverhauls$getParryResistance() != 0) {
+            exo.antisBetterCombatOverhauls$setParryResistance(exb.antisBetterCombatOverhauls$getParryResistance());
+        }
+        else {
+            exo.antisBetterCombatOverhauls$setParryResistance(exa.antisBetterCombatOverhauls$getParryResistance());
+        }
+        // Parry Duration
+        if (exb.antisBetterCombatOverhauls$getParryDuration() != -1) {
+            exo.antisBetterCombatOverhauls$setParryDuration(exb.antisBetterCombatOverhauls$getParryDuration());
+        }
+        else {
+            exo.antisBetterCombatOverhauls$setParryDuration(exa.antisBetterCombatOverhauls$getParryDuration());
+        }
+        // Parry Punishment
+        if (exb.antisBetterCombatOverhauls$getParryPunishment() != -1) {
+            exo.antisBetterCombatOverhauls$setParryPunishment(exb.antisBetterCombatOverhauls$getParryPunishment());
+        }
+        else {
+            exo.antisBetterCombatOverhauls$setParryPunishment(exa.antisBetterCombatOverhauls$getParryPunishment());
         }
         return original;
     }

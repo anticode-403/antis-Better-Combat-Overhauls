@@ -8,6 +8,8 @@ import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.EntityPlayer_BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -86,14 +88,29 @@ public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttack
         return original;
     }
 
-    @ModifyVariable(method = "attack", at = @At("STORE"), ordinal = 0)
-    private int injectNewKBAttribute(int value) {
+    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;onAttacking(Lnet/minecraft/entity/Entity;)V"))
+    private void injectNewKBAttribute(Entity target, CallbackInfo ci) {
         PlayerEntity player = (PlayerEntity)(Object)this;
+        LivingEntity livingTarget = (LivingEntity)target;
         EntityPlayer_BetterCombat player_bc = (EntityPlayer_BetterCombat)player;
         AttackHand hand = player_bc.getCurrentAttack();
-        if (hand == null) return value;
+        if (hand == null) return;
         ExpandedAttack expandedAttack = (ExpandedAttack)(Object)hand.attack();
-        return value + expandedAttack.antisBetterCombatOverhauls$getKnockback();
+        double strength = 0.4D * expandedAttack.antisBetterCombatOverhauls$getKnockback();
+        double x = player.getX() - livingTarget.getX();
+        double y;
+        for(y = player.getZ() - livingTarget.getZ(); x * x + y * y < 1.0E-4; y = (Math.random() - Math.random()) * 0.01) {
+            x = (Math.random() - Math.random()) * 0.01;
+        }
+        double comparativeStrength = strength - 0.4D;
+        if (strength < 0) comparativeStrength = strength + 0.4D;
+        double realStrength = comparativeStrength;
+        if (comparativeStrength < 0) {
+            x *= -1;
+            y *= -1;
+            realStrength *= -1;
+        }
+        livingTarget.takeKnockback(realStrength, x, y);
     }
 
     @ModifyConstant(method = "attack", constant = @Constant(floatValue = 1.5F))
@@ -111,7 +128,7 @@ public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttack
     private void postTick(CallbackInfo ci) {
         PlayerEntity player = (PlayerEntity)(Object)this;
         if (player.getWorld().isClient()) {
-            ((VersatileAnimatedPlayer)player).antisBetterCombatOverhauls$updateAlternatePose();
+            ((AbcoAnimatedPlayer)player).antisBetterCombatOverhauls$updateAlternatePose();
         }
     }
 }
