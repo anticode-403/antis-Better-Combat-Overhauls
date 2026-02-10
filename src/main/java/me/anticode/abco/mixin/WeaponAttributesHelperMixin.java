@@ -98,6 +98,13 @@ public abstract class WeaponAttributesHelperMixin {
         else {
             exo.antisBetterCombatOverhauls$setParryPunishment(exa.antisBetterCombatOverhauls$getParryPunishment());
         }
+        // Parry Pose
+        if (exb.antisBetterCombatOverhauls$hasParryPose()) {
+            exo.antisBetterCombatOverhauls$setParryPose(exb.antisBetterCombatOverhauls$getParryPose());
+        }
+        else {
+            exo.antisBetterCombatOverhauls$setParryPose(exa.antisBetterCombatOverhauls$getParryPose());
+        }
         return original;
     }
 

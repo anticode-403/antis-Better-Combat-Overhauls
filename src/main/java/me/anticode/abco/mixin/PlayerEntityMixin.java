@@ -18,11 +18,13 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = PlayerEntity.class, priority = 1500)
-public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttackComboApi {
+public abstract class PlayerEntityMixin implements AbcoPlayerEntity, HeavyAttackComboApi {
     @Unique
     private boolean wasLastAttackSpecial = false;
     @Unique
     private int heavyCombo = 0;
+    @Unique
+    private int parryingTicks = 0;
 
     @Override
     public boolean antisBetterCombatOverhauls$wasLastAttackSpecial() {
@@ -31,6 +33,16 @@ public abstract class PlayerEntityMixin implements ABCOPlayerEntity, HeavyAttack
     @Override
     public void antisBetterCombatOverhauls$setLastAttackSpecial(boolean attack) {
         wasLastAttackSpecial = attack;
+    }
+
+    @Override
+    public int antisBetterCombatOverhauls$getParryTicks() {
+        return parryingTicks;
+    }
+
+    @Override
+    public void antisBetterCombatOverhauls$setParryTicks(int ticks) {
+        parryingTicks = ticks;
     }
 
     @Override

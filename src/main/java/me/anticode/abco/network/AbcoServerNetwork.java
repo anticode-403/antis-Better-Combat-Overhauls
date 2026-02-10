@@ -4,8 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import me.anticode.abco.BCOverhauls;
-import me.anticode.abco.api.ABCOPlayerEntity;
-import me.anticode.abco.api.ExpandedAttackHand;
+import me.anticode.abco.api.AbcoPlayerEntity;
 import me.anticode.abco.api.HeavyAttackComboApi;
 import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
 import net.bettercombat.BetterCombat;
@@ -210,7 +209,7 @@ public class AbcoServerNetwork {
                 }
             });
             world.getServer().executeSync(() -> {
-                ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
+                AbcoPlayerEntity abcoPlayerEntity = (AbcoPlayerEntity)player;
                 HeavyAttackComboApi comboPlayer = (HeavyAttackComboApi)player;
                 if (packet.heavyAttack()) {
                     comboPlayer.antisBetterCombatOverhauls$setHeavyCombo(packet.comboCount());
@@ -218,6 +217,16 @@ public class AbcoServerNetwork {
                 } else {
                     abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
                 }
+            });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(AbcoPackets.C2S_ParryRequest.ID, (server, player, handler, buf, responseSender) -> {
+            ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.getWorld()).orNull();
+            if (world == null || world.isClient) return;
+            final AbcoPackets.C2S_ParryRequest packet = AbcoPackets.C2S_ParryRequest.read(buf);
+            world.getServer().executeSync(() -> {
+                AbcoPlayerEntity abcoPlayerEntity = (AbcoPlayerEntity)player;
+                abcoPlayerEntity.antisBetterCombatOverhauls$setParryTicks(packet.length());
             });
         });
     }

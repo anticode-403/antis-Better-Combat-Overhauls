@@ -41,7 +41,7 @@
       {
         "hitbox": "HORIZONTAL_PLANE",
         "damage_multiplier": 0.8,
-        "knockback": 1,
+        "knockback_multiplier": 1.5,
         "angle": 120,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_slash_horizontal_left",
@@ -55,7 +55,7 @@
         "hitbox": "FORWARD_BOX",
         "damage_multiplier": 1,
         "critical": true,
-        "knockback": 1,
+        "knockback_multiplier": 2,
         "attack_speed_multiplier": 0.5,
         "angle": 0,
         "upswing": 0.5,

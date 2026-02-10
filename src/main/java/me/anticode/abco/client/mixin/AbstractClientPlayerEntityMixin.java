@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import dev.kosmx.playerAnim.api.layered.AnimationStack;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
+import me.anticode.abco.api.AbcoPlayerEntity;
 import me.anticode.abco.api.ExpandedWeaponAttributes;
 import me.anticode.abco.api.AbcoAnimatedPlayer;
 import net.bettercombat.Platform;

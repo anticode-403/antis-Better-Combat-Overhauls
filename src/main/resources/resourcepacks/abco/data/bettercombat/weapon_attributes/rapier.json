@@ -27,7 +27,7 @@
       {
         "hitbox": "FORWARD_BOX",
         "critical": true,
-        "knockback": 1,
+        "knockback_multiplier": 1.75,
         "damage_multiplier": 1.1,
         "angle": 0,
         "upswing": 0.5,

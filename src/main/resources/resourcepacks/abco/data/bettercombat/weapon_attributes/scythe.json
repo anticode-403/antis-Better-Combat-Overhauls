@@ -29,7 +29,7 @@
         "hitbox": "HORIZONTAL_PLANE",
         "damage_multiplier": 1,
         "critical": true,
-        "knockback": 1,
+        "knockback_multiplier": 1.5,
         "angle": 150,
         "upswing": 0.5,
         "animation": "bettercombat:two_handed_spin",
@@ -42,11 +42,12 @@
       {
         "hitbox": "HORIZONTAL_PLANE",
         "damage_multiplier": 1,
+        "attack_speed_multiplier": 0.6,
         "critical": true,
-        "knockback": 1,
+        "knockback_multiplier": 2,
         "angle": 150,
-        "upswing": 0.5,
-        "animation": "bettercombat:two_handed_slam_heavy",
+        "upswing": 0.65,
+        "animation": "abco:two_handed_heavy_glaive_upswing",
         "swing_sound": {
           "id": "bettercombat:hammer_slam"
         }

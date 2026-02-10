@@ -4,6 +4,7 @@
     "category": "sickle",
     "paired": true,
     "finesse": true,
+    "parry_pose": "abco:block_dual_wield",
     "critical_multiplier": 1.5,
     "attacks": [
       {
@@ -43,7 +44,7 @@
         "hitbox": "FORWARD_BOX",
         "conditions": ["DUAL_WIELDING_SAME_CATEGORY", "OFF_HAND_ONLY"],
         "critical": true,
-        "knockback": 1,
+        "knockback_multiplier": 1.75,
         "damage_multiplier": 1.3,
         "angle": 0,
         "upswing": 0.5,

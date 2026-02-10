@@ -70,22 +70,20 @@ public class AbcoPackets {
         }
     }
 
-    public record C2S_ParryRequest (int playerId, String animationName, float length) {
+    public record C2S_ParryRequest (int playerId, int length) {
         public static Identifier ID = new Identifier(BCOverhauls.modID, "parry_request");
 
         public PacketByteBuf write() {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeInt(playerId);
-            buffer.writeString(animationName);
-            buffer.writeFloat(length);
+            buffer.writeInt(length);
             return buffer;
         }
 
         public static C2S_ParryRequest read(PacketByteBuf buffer) {
             int playerId = buffer.readInt();
-            String animationName = buffer.readString();
-            float length = buffer.readFloat();
-            return new C2S_ParryRequest(playerId, animationName, length);
+            int length = buffer.readInt();
+            return new C2S_ParryRequest(playerId, length);
         }
     }
 }

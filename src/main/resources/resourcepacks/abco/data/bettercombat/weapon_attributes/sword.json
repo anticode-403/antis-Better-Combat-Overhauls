@@ -83,8 +83,8 @@
         "knockback_multiplier": 2,
         "attack_speed_multiplier": 0.4,
         "angle": 150,
-        "upswing": 0.68,
-        "animation": "abco:onehanded_spin_attack",
+        "upswing": 0.666,
+        "animation": "abco:one_handed_heavy_overswing",
         "swing_sound": {
           "id": "bettercombat:pickaxe_swing"
         }

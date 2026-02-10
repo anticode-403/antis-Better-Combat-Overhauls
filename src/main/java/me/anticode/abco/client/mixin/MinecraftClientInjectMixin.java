@@ -63,6 +63,12 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
     @Unique
     private int heavyComboReset = 0;
 
+    @Unique
+    private int parryingTicks = 0;
+
+    @Unique
+    private int parryPunishment = 0;
+
     public int antisBetterCombatOverhauls$getHeavyCombo() {
         return this.heavyCombo;
     }
@@ -136,18 +142,19 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
     )
     @Inject(
             method = "@MixinSquared:Handler",
-            at = @At(value = "HEAD")
-    )
+            at = @At(value = "HEAD"),
+            cancellable = true)
     private void injectInvertWeaponAttack(WeaponAttributes attributes, CallbackInfo ci) {
         try {
             MinecraftClient client = ((MinecraftClient)(Object)this);
             ClientPlayerEntity player = client.player;
             if (player.isRiding()) return;
-            ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
+            AbcoPlayerEntity abcoPlayerEntity = (AbcoPlayerEntity)player;
             assert abcoPlayerEntity != null;
             AttackHand hand = (AttackHand)(MinecraftClient.class.getDeclaredMethod("getCurrentHand").invoke(client));
             float upswingRate = (float)hand.upswingRate();
             if (((int)MinecraftClient.class.getDeclaredField("upswingTicks").get(client)) > 0 || attackCooldown > 0 || player.isUsingItem() || player.getAttackCooldownProgress(0) < (1 - upswingRate)) return;
+            if (parryPunishment > 0) ci.cancel();
             abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
         }  catch (Throwable throwable) {
             BCOverhauls.LOGGER.error(throwable.getMessage(), throwable);
@@ -180,7 +187,7 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             cancellable = true
     )
     private void redirectComboSetter(int comboCount, CallbackInfo ci) {
-        ABCOPlayerEntity abcoPlayer = ((ABCOPlayerEntity)player);
+        AbcoPlayerEntity abcoPlayer = ((AbcoPlayerEntity)player);
         if (comboCount == 0) return;
         if (abcoPlayer.antisBetterCombatOverhauls$wasLastAttackSpecial()) {
             heavyCombo++;
@@ -205,7 +212,7 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
     )
     private void cancelUpdateTargetsIfNull(CallbackInfo ci, @Local AttackHand attackHand) {
         if (attackHand == null) {
-            ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
+            AbcoPlayerEntity abcoPlayerEntity = (AbcoPlayerEntity)player;
             assert abcoPlayerEntity != null;
             abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(false);
             ci.cancel();
@@ -216,6 +223,8 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
     private void tick(CallbackInfo ci) {
         if (player != null) {
             resetHeavyComboIfNeeded();
+            if (parryingTicks > 0) parryingTicks--;
+            if (parryPunishment > 0) parryPunishment--;
         }
     }
 
@@ -231,6 +240,7 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
                     || (expandedAttributes.antisBetterCombatOverhauls$getPaired() && WeaponRegistry.getAttributes(player.getOffHandStack()) != null && Objects.equals(WeaponRegistry.getAttributes(player.getOffHandStack()).category(), attributes.category()))
                     || (expandedAttributes.antisBetterCombatOverhauls$getFinesse() && player.getOffHandStack().isEmpty())) {
                 if (expandedAttributes.antisBetterCombatOverhauls$getFinesse()) {
+                    BCOverhauls.LOGGER.debug("Is finesse");
                     if (!expandedAttributes.antisBetterCombatOverhauls$hasParryPose()) ci.cancel();
                     startFinesseParry(attributes, expandedAttributes);
                 }
@@ -244,23 +254,26 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
 
     @Unique
     private void startFinesseParry(WeaponAttributes attributes, ExpandedWeaponAttributes expandedWeaponAttributes) {
+        BCOverhauls.LOGGER.debug("Starting finesse parry hiiiiiii bestie");
         MinecraftClient client = ((MinecraftClient)(Object)this);
         ClientPlayerEntity player = client.player;
         if (player == null) return;
         if (player.isRiding()) return;
         try {
-            if (((int)MinecraftClient.class.getDeclaredField("upswingTicks").get(client)) > 0 || attackCooldown > 0 || player.isUsingItem()) return;
+            if (((int)MinecraftClient.class.getDeclaredField("upswingTicks").get(client)) > 0 || attackCooldown > 0 || player.isUsingItem() || parryPunishment > 0) return;
             player.stopUsingItem();
             MinecraftClient.class.getDeclaredField("lastAttacked").set(client, 0);
             MinecraftClient.class.getDeclaredField("upswingStack").set(client, player.getMainHandStack());
             int attackCooldownTicks = expandedWeaponAttributes.antisBetterCombatOverhauls$getParryDuration() + expandedWeaponAttributes.antisBetterCombatOverhauls$getParryPunishment();
             heavyComboReset = Math.round(attackCooldownTicks * BetterCombat.config.combo_reset_rate);
-            MinecraftClient.class.getDeclaredField("lastSwingDuration").set(client, attackCooldownTicks);
             itemUseCooldown = attackCooldownTicks;
             ((MinecraftClientAccessor)client).setAttackCooldown(attackCooldownTicks);
             // Mark player as parrying in PlayerEntityMixin.
-            ((AbcoAnimatedPlayer)player).antisBetterCombatOverhauls$updateAlternatePose();
-            ClientPlayNetworking.send(AbcoPackets.C2S_ParryRequest.ID, new AbcoPackets.C2S_ParryRequest(player.getId(), expandedWeaponAttributes.antisBetterCombatOverhauls$getParryPose(), expandedWeaponAttributes.antisBetterCombatOverhauls$getParryDuration()).write());
+            parryingTicks = expandedWeaponAttributes.antisBetterCombatOverhauls$getParryDuration();
+            parryPunishment = attackCooldownTicks;
+            ((AbcoPlayerEntity)player).antisBetterCombatOverhauls$setParryTicks(parryingTicks);
+            ((AbcoAnimatedPlayer)player).antisBetterCombatOverhauls$updateAlternatePose(); // program new parry pose
+            ClientPlayNetworking.send(AbcoPackets.C2S_ParryRequest.ID, new AbcoPackets.C2S_ParryRequest(player.getId(), expandedWeaponAttributes.antisBetterCombatOverhauls$getParryDuration()).write());
         } catch (Throwable throwable) {
             BCOverhauls.LOGGER.error(throwable.getMessage(), throwable);
         }
@@ -276,7 +289,7 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
         if (hand == null) return;
         float upswingRate = (float)hand.upswingRate();
         try {
-            if (((int)MinecraftClient.class.getDeclaredField("upswingTicks").get(client)) > 0 || attackCooldown > 0 || player.isUsingItem() || player.getAttackCooldownProgress(0) < (1 - upswingRate)) return;
+            if (((int)MinecraftClient.class.getDeclaredField("upswingTicks").get(client)) > 0 || attackCooldown > 0 || player.isUsingItem() || player.getAttackCooldownProgress(0) < (1 - upswingRate) || parryPunishment > 0) return;
             player.stopUsingItem();
             MinecraftClient.class.getDeclaredField("lastAttacked").set(client, 0);
             MinecraftClient.class.getDeclaredField("upswingStack").set(client, player.getMainHandStack());
@@ -291,9 +304,9 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             boolean isOffHand = hand.isOffHand();
             AnimatedHand animatedHand = AnimatedHand.from(isOffHand, attributes.isTwoHanded());
             ((PlayerAttackAnimatable)player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
-            ClientPlayNetworking.send(AbcoPackets.C2S_PlayerUpdaterRequest.ID, (new AbcoPackets.C2S_PlayerUpdaterRequest(player.getId(), true, heavyCombo, animatedHand, animationName, attackCooldownTicksFloat, upswingRate)).write());
+            ClientPlayNetworking.send(AbcoPackets.C2S_PlayerUpdaterRequest.ID, new AbcoPackets.C2S_PlayerUpdaterRequest(player.getId(), true, heavyCombo, animatedHand, animationName, attackCooldownTicksFloat, upswingRate).write());
             BetterCombatClientEvents.ATTACK_START.invoke((handler) -> handler.onPlayerAttackStart(player, hand));
-            ABCOPlayerEntity abcoPlayerEntity = (ABCOPlayerEntity)player;
+            AbcoPlayerEntity abcoPlayerEntity = (AbcoPlayerEntity)player;
             assert abcoPlayerEntity != null;
             abcoPlayerEntity.antisBetterCombatOverhauls$setLastAttackSpecial(true);
         } catch (Throwable throwable) {
