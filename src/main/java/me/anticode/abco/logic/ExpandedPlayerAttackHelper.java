@@ -78,7 +78,7 @@ public class ExpandedPlayerAttackHelper {
         if (attributes.isTwoHanded()) return true;
         if (expandedAttributes.antisBetterCombatOverhauls$getPaired() && WeaponRegistry.getAttributes(player.getOffHandStack()) != null && Objects.equals(WeaponRegistry.getAttributes(player.getOffHandStack()).category(), attributes.category()))
             return true;
-        return player.getOffHandStack() == ItemStack.EMPTY;
+        return !expandedAttributes.antisBetterCombatOverhauls$getPaired() && player.getOffHandStack() == ItemStack.EMPTY;
     }
 
     private static record AttackSelection(WeaponAttributes.Attack attack, ComboState comboState) {
