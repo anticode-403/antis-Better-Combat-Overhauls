@@ -12,6 +12,7 @@ import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
@@ -29,12 +30,12 @@ public abstract class ItemStackMixin implements ParryableWeaponItemStack {
     @Shadow
     public abstract Item getItem();
 
-    @Unique
-    private boolean didSuccessfullyBlock = false;
+    @Shadow
+    public abstract NbtCompound getOrCreateNbt();
 
     @Override
     public void antisBetterCombatOverhauls$shieldBlockedDamage() {
-        didSuccessfullyBlock = true;
+        getOrCreateNbt().putBoolean("SuccessfullyBlocked", true);
     }
 
     @ModifyReturnValue(method = "getUseAction", at = @At("RETURN"))
@@ -93,12 +94,12 @@ public abstract class ItemStackMixin implements ParryableWeaponItemStack {
         if (attributes == null) return;
         ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
         assert expandedAttributes != null;
-        if (!didSuccessfullyBlock) {
+        if (!(getOrCreateNbt().getBoolean("SuccessfullyBlocked"))) {
             ItemCooldownManager itemCooldownManager = player.getItemCooldownManager();
             itemCooldownManager.set(getItem(), expandedAttributes.antisBetterCombatOverhauls$getParryPunishment());
             if (player.getOffHandStack().equals(this)) itemCooldownManager.set(player.getMainHandStack().getItem(), expandedAttributes.antisBetterCombatOverhauls$getParryPunishment());
             else itemCooldownManager.set(player.getOffHandStack().getItem(), expandedAttributes.antisBetterCombatOverhauls$getParryPunishment());
         }
-        didSuccessfullyBlock = false;
+        getOrCreateNbt().putBoolean("SuccessfullyBlocked", false);
     }
 }
