@@ -1,6 +1,7 @@
 package me.anticode.abco.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import me.anticode.abco.api.AbcoAnimatedPlayer;
 import me.anticode.abco.api.ExpandedWeaponAttributes;
 import me.anticode.abco.api.ParryableWeaponItemStack;
 import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
@@ -65,6 +66,7 @@ public abstract class ItemStackMixin implements ParryableWeaponItemStack {
     @Inject(method = "usageTick", at = @At("HEAD"))
     private void useParryMechanic(World world, LivingEntity user, int remainingUseTicks, CallbackInfo ci) {
         if (!(user instanceof PlayerEntity)) return;
+        if (world.isClient()) ((AbcoAnimatedPlayer)user).antisBetterCombatOverhauls$updateAlternatePose();
         PlayerEntity player = (PlayerEntity)user;
         ItemStack itemStack = (ItemStack)(Object)this;
         WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);
@@ -84,6 +86,7 @@ public abstract class ItemStackMixin implements ParryableWeaponItemStack {
     @Inject(method = "onStoppedUsing", at = @At("HEAD"))
     private void parryPunishmentOnStoppedUsing(World world, LivingEntity user, int remainingUseTicks, CallbackInfo ci) {
         if (!(user instanceof PlayerEntity)) return;
+        if (world.isClient()) ((AbcoAnimatedPlayer)user).antisBetterCombatOverhauls$updateAlternatePose();
         PlayerEntity player = (PlayerEntity)user;
         ItemStack itemStack = (ItemStack)(Object)this;
         WeaponAttributes attributes = WeaponRegistry.getAttributes(itemStack);

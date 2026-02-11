@@ -7,6 +7,7 @@ import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import me.anticode.abco.api.AbcoPlayerEntity;
 import me.anticode.abco.api.ExpandedWeaponAttributes;
 import me.anticode.abco.api.AbcoAnimatedPlayer;
+import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
 import net.bettercombat.Platform;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.client.animation.AnimationRegistry;
@@ -38,7 +39,7 @@ public abstract class AbstractClientPlayerEntityMixin implements AbcoAnimatedPla
         PlayerEntity player = (PlayerEntity)(Object) this;
         boolean isLeftHanded = player.getMainArm() == Arm.LEFT;
         ItemStack itemStack = player.getMainHandStack();
-        if (player.handSwinging || player.isSwimming() || player.isUsingItem() || Platform.isCastingSpell(player) || itemStack == null) {
+        if (player.handSwinging || player.isSwimming() || Platform.isCastingSpell(player) || itemStack == null) {
             alternateBodyPose.setPose(null, isLeftHanded);
             alternateHandPose.setPose(null, isLeftHanded);
             return;
@@ -50,11 +51,13 @@ public abstract class AbstractClientPlayerEntityMixin implements AbcoAnimatedPla
             return;
         }
         ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
-        if (expandedAttributes.antisBetterCombatOverhauls$getVersatile() && expandedAttributes.antisBetterCombatOverhauls$hasAlternatePose() && player.getOffHandStack().isEmpty()) {
-            if (player.getOffHandStack().isEmpty()) {
-                alternateBodyPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getAlternatePose()), isLeftHanded);
-                alternateHandPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getAlternatePose()), isLeftHanded);
-            }
+        if (ExpandedPlayerAttackHelper.isCurrentlyFinesse(player, attributes, expandedAttributes) && player.isUsingItem()) {
+            alternateBodyPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getParryPose()), isLeftHanded);
+            alternateHandPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getParryPose()), isLeftHanded);
+        }
+        else if (((expandedAttributes.antisBetterCombatOverhauls$getVersatile() && player.getOffHandStack().isEmpty()) || ExpandedPlayerAttackHelper.isCurrentlyFinesse(player, attributes, expandedAttributes)) && expandedAttributes.antisBetterCombatOverhauls$hasAlternatePose() && !player.isUsingItem()) {
+            alternateBodyPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getAlternatePose()), isLeftHanded);
+            alternateHandPose.setPose(AnimationRegistry.animations.get(expandedAttributes.antisBetterCombatOverhauls$getAlternatePose()), isLeftHanded);
         } else {
             alternateBodyPose.setPose(null, isLeftHanded);
             alternateHandPose.setPose(null, isLeftHanded);
