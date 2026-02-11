@@ -67,9 +67,6 @@ There's no need to check for ABCO, either. If ABCO is NOT loaded, Better Combat 
 
 # TODO
 These are a list of planned future features. These features aren't necessarily guaranteed to come to ABCO and there will be no specific release date, but they are intended.
-- Finesse attribute
-  - Deflect/parry-oriented weapons. Finesse weapons do not have special attacks.
-- Support for Malfu Combat Animation
 - Versatile attack speed
   - Just another lever that can make versatile weapons unique
 - Provide weapon attributes for common mods
