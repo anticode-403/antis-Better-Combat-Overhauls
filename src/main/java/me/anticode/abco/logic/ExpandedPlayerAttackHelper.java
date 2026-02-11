@@ -53,6 +53,7 @@ public class ExpandedPlayerAttackHelper {
 
     private static AttackSelection selectHeavyAttack(int comboCount, WeaponAttributes attributes, ExpandedWeaponAttributes expandedAttributes, PlayerEntity player, boolean isOffHandAttack) {
         WeaponAttributes.Attack[] attacks = expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks();
+        if (attacks == null) return null;
         if (attacks.length == 0) return null;
         attacks = Arrays.stream(attacks).filter((attack) -> {
             if (attack.conditions() != null && attack.conditions().length != 0) {
