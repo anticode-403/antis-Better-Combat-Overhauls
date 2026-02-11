@@ -69,21 +69,4 @@ public class AbcoPackets {
             return new C2S_PlayerUpdaterRequest(playerId, heavyAttack, comboCount, animatedHand, animationName, length, upswing);
         }
     }
-
-    public record C2S_ParryRequest (int playerId, int length) {
-        public static Identifier ID = new Identifier(BCOverhauls.modID, "parry_request");
-
-        public PacketByteBuf write() {
-            PacketByteBuf buffer = PacketByteBufs.create();
-            buffer.writeInt(playerId);
-            buffer.writeInt(length);
-            return buffer;
-        }
-
-        public static C2S_ParryRequest read(PacketByteBuf buffer) {
-            int playerId = buffer.readInt();
-            int length = buffer.readInt();
-            return new C2S_ParryRequest(playerId, length);
-        }
-    }
 }

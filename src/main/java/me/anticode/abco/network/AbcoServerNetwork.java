@@ -219,15 +219,5 @@ public class AbcoServerNetwork {
                 }
             });
         });
-
-        ServerPlayNetworking.registerGlobalReceiver(AbcoPackets.C2S_ParryRequest.ID, (server, player, handler, buf, responseSender) -> {
-            ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.getWorld()).orNull();
-            if (world == null || world.isClient) return;
-            final AbcoPackets.C2S_ParryRequest packet = AbcoPackets.C2S_ParryRequest.read(buf);
-            world.getServer().executeSync(() -> {
-                AbcoPlayerEntity abcoPlayerEntity = (AbcoPlayerEntity)player;
-                abcoPlayerEntity.antisBetterCombatOverhauls$setParryTicks(packet.length());
-            });
-        });
     }
 }
