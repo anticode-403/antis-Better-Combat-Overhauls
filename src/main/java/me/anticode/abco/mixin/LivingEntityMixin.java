@@ -1,7 +1,9 @@
 package me.anticode.abco.mixin;
 
+import me.anticode.abco.BCOverhauls;
 import me.anticode.abco.api.ExpandedWeaponAttributes;
 import me.anticode.abco.api.ParryableWeaponItemStack;
+import me.anticode.abco.init.AbcoSounds;
 import me.anticode.abco.logic.ExpandedPlayerAttackHelper;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.logic.WeaponRegistry;
@@ -10,6 +12,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.random.Random;
@@ -17,6 +20,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
@@ -80,6 +84,20 @@ public abstract class LivingEntityMixin {
 
             ((ParryableWeaponItemStack)(Object)getMainHandStack()).antisBetterCombatOverhauls$shieldBlockedDamage();
             ((ParryableWeaponItemStack)(Object)getOffHandStack()).antisBetterCombatOverhauls$shieldBlockedDamage();
+        }
+    }
+
+    @Inject(method="handleStatus", at = @At("HEAD"), cancellable = true)
+    private void test(byte status, CallbackInfo ci) {
+        if (status != 29) return;
+        if (!(((LivingEntity)(Object)this) instanceof PlayerEntity)) return;
+        PlayerEntity player = (PlayerEntity)(Object)this;
+        WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getMainHandStack());
+        if (attributes == null) return;
+        ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
+        if (ExpandedPlayerAttackHelper.isCurrentlyFinesse(player, attributes, expandedAttributes)) {
+            player.playSound(AbcoSounds.PARRY_SOUND_EVENT, 0.6F, 0.8F + player.getWorld().random.nextFloat() * 0.4F);
+            ci.cancel();
         }
     }
 }

@@ -2,6 +2,7 @@ package me.anticode.abco;
 
 import me.anticode.abco.config.AbcoServerConfig;
 import me.anticode.abco.config.AbcoServerConfigWrapper;
+import me.anticode.abco.init.AbcoSounds;
 import me.anticode.abco.network.AbcoServerNetwork;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
@@ -25,6 +26,8 @@ public class BCOverhauls implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        AbcoSounds.initialize();
+        AbcoServerNetwork.initialize();
         AutoConfig.register(AbcoServerConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
         config = (AutoConfig.getConfigHolder(AbcoServerConfigWrapper.class).getConfig()).server;
         Optional<ModContainer> modContainer = FabricLoader.getInstance().getModContainer(modID);
@@ -33,6 +36,5 @@ public class BCOverhauls implements ModInitializer {
                 Text.translatable("pack.abco.abco"),
                 ResourcePackActivationType.ALWAYS_ENABLED
         ));
-        AbcoServerNetwork.initialize();
     }
 }

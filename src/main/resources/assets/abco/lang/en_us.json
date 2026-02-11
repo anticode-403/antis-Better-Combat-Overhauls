@@ -4,5 +4,6 @@
   "weapon_attributes.name.versatile": "Versatile",
   "weapon_attributes.name.versatile_damage": "Versatile Damage",
   "weapon_attributes.name.finesse": "Finesse",
-  "weapon_attributes.name.paired": "Paired"
+  "weapon_attributes.name.paired": "Paired",
+  "subtitles.abco.finesse_parry": "Attack parried"
 }
