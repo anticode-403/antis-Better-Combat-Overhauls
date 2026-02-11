@@ -78,25 +78,25 @@ public abstract class WeaponAttributesHelperMixin {
             exo.antisBetterCombatOverhauls$setHeavyAttacks(exa.antisBetterCombatOverhauls$getHeavyAttacks());
         }
         // Parry Resistance
-        if (exb.antisBetterCombatOverhauls$getParryResistance() != 0) {
-            exo.antisBetterCombatOverhauls$setParryResistance(exb.antisBetterCombatOverhauls$getParryResistance());
+        if (exb.antisBetterCombatOverhauls$getRawParryResistance() != 0) {
+            exo.antisBetterCombatOverhauls$setParryResistance(exb.antisBetterCombatOverhauls$getRawParryResistance());
         }
         else {
-            exo.antisBetterCombatOverhauls$setParryResistance(exa.antisBetterCombatOverhauls$getParryResistance());
+            exo.antisBetterCombatOverhauls$setParryResistance(exa.antisBetterCombatOverhauls$getRawParryResistance());
         }
         // Parry Duration
-        if (exb.antisBetterCombatOverhauls$getParryDuration() != -1) {
-            exo.antisBetterCombatOverhauls$setParryDuration(exb.antisBetterCombatOverhauls$getParryDuration());
+        if (exb.antisBetterCombatOverhauls$getRawParryDuration() != 0) {
+            exo.antisBetterCombatOverhauls$setParryDuration(exb.antisBetterCombatOverhauls$getRawParryDuration());
         }
         else {
-            exo.antisBetterCombatOverhauls$setParryDuration(exa.antisBetterCombatOverhauls$getParryDuration());
+            exo.antisBetterCombatOverhauls$setParryDuration(exa.antisBetterCombatOverhauls$getRawParryDuration());
         }
         // Parry Punishment
-        if (exb.antisBetterCombatOverhauls$getParryPunishment() != -1) {
-            exo.antisBetterCombatOverhauls$setParryPunishment(exb.antisBetterCombatOverhauls$getParryPunishment());
+        if (exb.antisBetterCombatOverhauls$getRawParryPunishment() != 0) {
+            exo.antisBetterCombatOverhauls$setParryPunishment(exb.antisBetterCombatOverhauls$getRawParryPunishment());
         }
         else {
-            exo.antisBetterCombatOverhauls$setParryPunishment(exa.antisBetterCombatOverhauls$getParryPunishment());
+            exo.antisBetterCombatOverhauls$setParryPunishment(exa.antisBetterCombatOverhauls$getRawParryPunishment());
         }
         // Parry Pose
         if (exb.antisBetterCombatOverhauls$hasParryPose()) {

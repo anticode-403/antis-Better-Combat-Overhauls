@@ -65,15 +65,21 @@ public interface ExpandedWeaponAttributes {
     // Parry Resistance
     double antisBetterCombatOverhauls$getParryResistance();
 
+    double antisBetterCombatOverhauls$getRawParryResistance();
+
     void antisBetterCombatOverhauls$setParryResistance(double resistance);
 
     // Parry Duration
     int antisBetterCombatOverhauls$getParryDuration();
 
+    int antisBetterCombatOverhauls$getRawParryDuration();
+
     void antisBetterCombatOverhauls$setParryDuration(int duration);
 
     // Parry Duration
     int antisBetterCombatOverhauls$getParryPunishment();
+
+    int antisBetterCombatOverhauls$getRawParryPunishment();
 
     void antisBetterCombatOverhauls$setParryPunishment(int duration);
 }

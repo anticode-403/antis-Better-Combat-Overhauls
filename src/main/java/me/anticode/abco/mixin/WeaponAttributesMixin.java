@@ -29,9 +29,9 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
     @Unique
     private double parry_resistance = 0;
     @Unique
-    private int parry_duration = -1;
+    private int parry_duration = 0;
     @Unique
-    private int parry_punishment = -1;
+    private int parry_punishment = 0;
 
 
     @Override
@@ -154,13 +154,23 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
     }
 
     @Override
+    public double antisBetterCombatOverhauls$getRawParryResistance() {
+        return parry_resistance;
+    }
+
+    @Override
     public void antisBetterCombatOverhauls$setParryResistance(double resistance) {
         this.parry_resistance = resistance;
     }
 
     @Override
     public int antisBetterCombatOverhauls$getParryDuration() {
-        if (parry_duration == -1) return 15;
+        if (parry_duration == 0) return 15;
+        return parry_duration;
+    }
+
+    @Override
+    public int antisBetterCombatOverhauls$getRawParryDuration() {
         return parry_duration;
     }
 
@@ -171,7 +181,12 @@ public abstract class WeaponAttributesMixin implements ExpandedWeaponAttributes 
 
     @Override
     public int antisBetterCombatOverhauls$getParryPunishment() {
-        if (parry_punishment == -1) return 20;
+        if (parry_punishment == 0) return 20;
+        return parry_punishment;
+    }
+
+    @Override
+    public int antisBetterCombatOverhauls$getRawParryPunishment() {
         return parry_punishment;
     }
 
