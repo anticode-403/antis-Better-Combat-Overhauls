@@ -73,6 +73,14 @@ public class ExpandedPlayerAttackHelper {
         return Math.max((float)(1D / (player.getAttributeValue(EntityAttributes.GENERIC_ATTACK_SPEED) * expandedAttack.antisBetterCombatOverhauls$getAttackSpeedMultiplier()) * 20D), (float) BetterCombat.config.attack_interval_cap);
     }
 
+    public static boolean isCurrentlyFinesse(PlayerEntity player, WeaponAttributes attributes, ExpandedWeaponAttributes expandedAttributes) {
+        if (!expandedAttributes.antisBetterCombatOverhauls$getFinesse()) return false;
+        if (attributes.isTwoHanded()) return true;
+        if (expandedAttributes.antisBetterCombatOverhauls$getPaired() && WeaponRegistry.getAttributes(player.getOffHandStack()) != null && Objects.equals(WeaponRegistry.getAttributes(player.getOffHandStack()).category(), attributes.category()))
+            return true;
+        return player.getOffHandStack() == ItemStack.EMPTY;
+    }
+
     private static record AttackSelection(WeaponAttributes.Attack attack, ComboState comboState) {
     }
 

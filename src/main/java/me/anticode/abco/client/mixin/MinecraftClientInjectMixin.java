@@ -240,9 +240,11 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
                     || (expandedAttributes.antisBetterCombatOverhauls$getPaired() && WeaponRegistry.getAttributes(player.getOffHandStack()) != null && Objects.equals(WeaponRegistry.getAttributes(player.getOffHandStack()).category(), attributes.category()))
                     || (expandedAttributes.antisBetterCombatOverhauls$getFinesse() && player.getOffHandStack().isEmpty())) {
                 if (expandedAttributes.antisBetterCombatOverhauls$getFinesse()) {
-                    BCOverhauls.LOGGER.debug("Is finesse");
-                    if (!expandedAttributes.antisBetterCombatOverhauls$hasParryPose()) ci.cancel();
-                    startFinesseParry(attributes, expandedAttributes);
+                    if (!expandedAttributes.antisBetterCombatOverhauls$hasParryPose()) {
+                        BCOverhauls.LOGGER.warn("{} is finesse, but has no parry pose! Ignoring.", attributes.category());
+                        ci.cancel();
+                    }
+                    return;
                 }
                 else if (expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() == null && expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length != 0) ci.cancel();
                 else
@@ -252,32 +254,32 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
         }
     }
 
-    @Unique
-    private void startFinesseParry(WeaponAttributes attributes, ExpandedWeaponAttributes expandedWeaponAttributes) {
-        BCOverhauls.LOGGER.debug("Starting finesse parry hiiiiiii bestie");
-        MinecraftClient client = ((MinecraftClient)(Object)this);
-        ClientPlayerEntity player = client.player;
-        if (player == null) return;
-        if (player.isRiding()) return;
-        try {
-            if (((int)MinecraftClient.class.getDeclaredField("upswingTicks").get(client)) > 0 || attackCooldown > 0 || player.isUsingItem() || parryPunishment > 0) return;
-            player.stopUsingItem();
-            MinecraftClient.class.getDeclaredField("lastAttacked").set(client, 0);
-            MinecraftClient.class.getDeclaredField("upswingStack").set(client, player.getMainHandStack());
-            int attackCooldownTicks = expandedWeaponAttributes.antisBetterCombatOverhauls$getParryDuration() + expandedWeaponAttributes.antisBetterCombatOverhauls$getParryPunishment();
-            heavyComboReset = Math.round(attackCooldownTicks * BetterCombat.config.combo_reset_rate);
-            itemUseCooldown = attackCooldownTicks;
-            ((MinecraftClientAccessor)client).setAttackCooldown(attackCooldownTicks);
-            // Mark player as parrying in PlayerEntityMixin.
-            parryingTicks = expandedWeaponAttributes.antisBetterCombatOverhauls$getParryDuration();
-            parryPunishment = attackCooldownTicks;
-            ((AbcoPlayerEntity)player).antisBetterCombatOverhauls$setParryTicks(parryingTicks);
-            ((AbcoAnimatedPlayer)player).antisBetterCombatOverhauls$updateAlternatePose(); // program new parry pose
-            ClientPlayNetworking.send(AbcoPackets.C2S_ParryRequest.ID, new AbcoPackets.C2S_ParryRequest(player.getId(), expandedWeaponAttributes.antisBetterCombatOverhauls$getParryDuration()).write());
-        } catch (Throwable throwable) {
-            BCOverhauls.LOGGER.error(throwable.getMessage(), throwable);
-        }
-    }
+//    @Unique
+//    private void startFinesseParry(WeaponAttributes attributes, ExpandedWeaponAttributes expandedWeaponAttributes) {
+//        BCOverhauls.LOGGER.debug("Starting finesse parry hiiiiiii bestie");
+//        MinecraftClient client = ((MinecraftClient)(Object)this);
+//        ClientPlayerEntity player = client.player;
+//        if (player == null) return;
+//        if (player.isRiding()) return;
+//        try {
+//            if (((int)MinecraftClient.class.getDeclaredField("upswingTicks").get(client)) > 0 || attackCooldown > 0 || player.isUsingItem() || parryPunishment > 0) return;
+//            player.stopUsingItem();
+//            MinecraftClient.class.getDeclaredField("lastAttacked").set(client, 0);
+//            MinecraftClient.class.getDeclaredField("upswingStack").set(client, player.getMainHandStack());
+//            int attackCooldownTicks = expandedWeaponAttributes.antisBetterCombatOverhauls$getParryDuration() + expandedWeaponAttributes.antisBetterCombatOverhauls$getParryPunishment();
+//            heavyComboReset = Math.round(attackCooldownTicks * BetterCombat.config.combo_reset_rate);
+//            itemUseCooldown = attackCooldownTicks;
+//            ((MinecraftClientAccessor)client).setAttackCooldown(attackCooldownTicks);
+//            // Mark player as parrying in PlayerEntityMixin.
+//            parryingTicks = expandedWeaponAttributes.antisBetterCombatOverhauls$getParryDuration();
+//            parryPunishment = attackCooldownTicks;
+//            ((AbcoPlayerEntity)player).antisBetterCombatOverhauls$setParryTicks(parryingTicks);
+//            ((AbcoAnimatedPlayer)player).antisBetterCombatOverhauls$updateAlternatePose(); // program new parry pose
+//            ClientPlayNetworking.send(AbcoPackets.C2S_ParryRequest.ID, new AbcoPackets.C2S_ParryRequest(player.getId(), expandedWeaponAttributes.antisBetterCombatOverhauls$getParryDuration()).write());
+//        } catch (Throwable throwable) {
+//            BCOverhauls.LOGGER.error(throwable.getMessage(), throwable);
+//        }
+//    }
 
     @Unique
     private void startHeavyUpswing(WeaponAttributes attributes) {
