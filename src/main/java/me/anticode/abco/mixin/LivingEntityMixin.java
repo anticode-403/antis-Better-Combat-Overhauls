@@ -10,6 +10,8 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Arm;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,6 +35,12 @@ public abstract class LivingEntityMixin {
 
     @Shadow
     public abstract boolean damage(DamageSource source, float amount);
+
+    @Shadow
+    public abstract Arm getMainArm();
+
+    @Shadow
+    public abstract Hand getActiveHand();
 
     @Inject(method = "isBlocking", at = @At("HEAD"), cancellable = true)
     private void isParryingOrBlocking(CallbackInfoReturnable<Boolean> cir){
@@ -68,7 +76,7 @@ public abstract class LivingEntityMixin {
             if (expandedAttributes.antisBetterCombatOverhauls$getPaired()) {
                 damageTarget = getRandom().nextBoolean() ? getMainHandStack() : getOffHandStack();
             }
-            if (damageTarget.isDamageable()) damageTarget.damage(3, getRandom(), (ServerPlayerEntity)(Object)this);
+            if (damageTarget.isDamageable()) damageTarget.damage(3, (ServerPlayerEntity)(Object)this, (player) -> player.sendToolBreakStatus(getActiveHand()));
 
             ((ParryableWeaponItemStack)(Object)getMainHandStack()).antisBetterCombatOverhauls$shieldBlockedDamage();
             ((ParryableWeaponItemStack)(Object)getOffHandStack()).antisBetterCombatOverhauls$shieldBlockedDamage();
