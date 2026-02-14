@@ -238,7 +238,7 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
                     }
                     return;
                 }
-                else if (expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() == null && expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length != 0) ci.cancel();
+                else if (expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() == null || expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length == 0) ci.cancel();
                 else
                     startHeavyUpswing(attributes);
                 ci.cancel();

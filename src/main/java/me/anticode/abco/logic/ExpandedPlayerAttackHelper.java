@@ -43,6 +43,7 @@ public class ExpandedPlayerAttackHelper {
             if (attributes != null && attributes.attacks() != null) {
                 int handSpecificComboCount = (isOffHand && heavyComboCount > 0 ? heavyComboCount - 1 : heavyComboCount) / 2;
                 AttackSelection attackSelection = selectHeavyAttack(handSpecificComboCount, attributes, expandedAttributes, player, isOffHand);
+                if (attackSelection == null) return null;
                 WeaponAttributes.Attack attack = attackSelection.attack;
                 ComboState combo = attackSelection.comboState;
                 return new AttackHand(attack, combo, isOffHand, attributes, itemStack);
