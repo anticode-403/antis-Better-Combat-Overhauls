@@ -90,6 +90,7 @@ public abstract class PlayerEntityMixin implements AbcoPlayerEntity, HeavyAttack
 
     @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;onAttacking(Lnet/minecraft/entity/Entity;)V"))
     private void injectNewKBAttribute(Entity target, CallbackInfo ci) {
+        if (!(target instanceof LivingEntity)) return;
         PlayerEntity player = (PlayerEntity)(Object)this;
         LivingEntity livingTarget = (LivingEntity)target;
         EntityPlayer_BetterCombat player_bc = (EntityPlayer_BetterCombat)player;
