@@ -236,12 +236,8 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
                         BCOverhauls.LOGGER.warn("{} is finesse, but has no parry pose! Ignoring.", attributes.category());
                         ci.cancel();
                     }
-                    return;
                 }
-                else if (expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() == null || expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length == 0) ci.cancel();
-                else
-                    startHeavyUpswing(attributes);
-                ci.cancel();
+                else if (expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() != null && expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length != 0) startHeavyUpswing(attributes);
             }
         }
     }
