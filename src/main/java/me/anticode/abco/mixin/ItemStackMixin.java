@@ -94,7 +94,7 @@ public abstract class ItemStackMixin implements ParryableWeaponItemStack {
         if (attributes == null) return;
         ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object)attributes;
         assert expandedAttributes != null;
-        if (!(getOrCreateNbt().getBoolean("SuccessfullyBlocked"))) {
+        if (!getOrCreateNbt().getBoolean("SuccessfullyBlocked") && ExpandedPlayerAttackHelper.isCurrentlyFinesse(player, attributes, expandedAttributes)) {
             ItemCooldownManager itemCooldownManager = player.getItemCooldownManager();
             itemCooldownManager.set(getItem(), expandedAttributes.antisBetterCombatOverhauls$getParryPunishment());
             if (player.getOffHandStack().equals(this)) itemCooldownManager.set(player.getMainHandStack().getItem(), expandedAttributes.antisBetterCombatOverhauls$getParryPunishment());
