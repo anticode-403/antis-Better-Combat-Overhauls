@@ -2,7 +2,7 @@
   "finesse_parry": {
     "subtitle": "subtitles.abco.finesse_parry",
     "sounds": [
-      "abco:finesse_parry"
+      "abco:finesse_parry_0", "abco:finesse_parry_1", "abco:finesse_parry_2", "abco:finesse_parry_3"
     ]
   }
 }
