@@ -26,6 +26,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -39,7 +40,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
@@ -242,6 +242,16 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
                 else if (expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks() != null && expandedAttributes.antisBetterCombatOverhauls$getHeavyAttacks().length != 0) startHeavyUpswing(attributes);
             }
         }
+    }
+
+    @WrapOperation(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;stopUsingItem(Lnet/minecraft/entity/player/PlayerEntity;)V"))
+    private void preventStopUsingWhileParrying(ClientPlayerInteractionManager instance, PlayerEntity player, Operation<Void> original) {
+        WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getActiveItem());
+        if (attributes != null) {
+            ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes)(Object) attributes;
+            if (expandedAttributes.antisBetterCombatOverhauls$getFinesse()) return;
+        }
+        original.call(instance, player);
     }
 
     @Unique
