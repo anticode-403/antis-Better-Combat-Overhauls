@@ -2,6 +2,8 @@ package me.anticode.abco.client.mixin;
 
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.anticode.abco.BCOverhauls;
 import me.anticode.abco.api.*;
@@ -122,11 +124,11 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             mixin = "net.bettercombat.mixin.client.MinecraftClientInject",
             name = "startUpswing(Lnet/bettercombat/api/WeaponAttributes;)V"
     )
-    @Redirect(
+    @WrapOperation(
             method = "@MixinSquared:Handler",
             at = @At(value = "INVOKE", target = "Lnet/bettercombat/logic/PlayerAttackHelper;getAttackCooldownTicksCapped(Lnet/minecraft/entity/player/PlayerEntity;)F")
     )
-    private float redirectAttackSpeedCheck(PlayerEntity player, @Local AttackHand hand) {
+    private float redirectAttackSpeedCheck(PlayerEntity player, Operation<Float> original, @Local AttackHand hand) {
         return ExpandedPlayerAttackHelper.getAttackCooldownTicksCapped(player, hand.attack());
     }
 
@@ -159,16 +161,16 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
             mixin = "net.bettercombat.mixin.client.MinecraftClientInject",
             name = "performAttack()V"
     )
-    @Redirect(
+    @WrapOperation(
             method = "@MixinSquared:Handler",
             at = @At(value = "INVOKE", target = "Lnet/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking;send(Lnet/minecraft/util/Identifier;Lnet/minecraft/network/PacketByteBuf;)V")
     )
-    private void serverPacketReplace(Identifier identifier, PacketByteBuf buf, @Local AttackHand attackHand) {
+    private void serverPacketReplace(Identifier channelName, PacketByteBuf buf, Operation<Void> original, @Local AttackHand attackHand) {
         ExpandedAttackHand expandedHand = (ExpandedAttackHand)(Object)attackHand;
         Packets.C2S_AttackRequest attackRequest = Packets.C2S_AttackRequest.read(buf);
         boolean is_heavy = expandedHand.antisBetterCombatOverhauls$isSpecialAttack();
         int combo = is_heavy ? heavyCombo : attackRequest.comboCount();
-        ClientPlayNetworking.send(AbcoPackets.C2S_AttackRequest.ID, (new AbcoPackets.C2S_AttackRequest(is_heavy, combo, attackRequest.isSneaking(), attackRequest.selectedSlot(), attackRequest.entityIds()).write()));
+        original.call(AbcoPackets.C2S_AttackRequest.ID, (new AbcoPackets.C2S_AttackRequest(is_heavy, combo, attackRequest.isSneaking(), attackRequest.selectedSlot(), attackRequest.entityIds()).write()));
     }
 
     @TargetHandler(
