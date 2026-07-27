@@ -254,6 +254,22 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
         original.call(instance, player);
     }
 
+    @Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isUsingItem()Z", ordinal = 0))
+    private void stopParryingWhenAttacking(CallbackInfo ci) {
+        MinecraftClient client = ((MinecraftClient)(Object)this);
+        ClientPlayerEntity player = client.player;
+        if (!player.isUsingItem()) return;
+        WeaponAttributes attributes = WeaponRegistry.getAttributes(player.getActiveItem());
+        if (attributes != null) {
+            ExpandedWeaponAttributes expandedAttributes = (ExpandedWeaponAttributes) (Object) attributes;
+            if (expandedAttributes.antisBetterCombatOverhauls$getFinesse()) {
+                while (client.options.attackKey.wasPressed()) {
+                    player.stopUsingItem();
+                }
+            }
+        }
+    }
+
     @Unique
     private void startHeavyUpswing(WeaponAttributes attributes) {
         MinecraftClient client = ((MinecraftClient)(Object)this);
