@@ -222,6 +222,14 @@ public abstract class MinecraftClientInjectMixin implements HeavyAttackComboApi 
         }
     }
 
+    @Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doAttack()Z"))
+    private void preventBreakingAttacks(CallbackInfo ci) {
+        // my god this entire mod is held together with sticks and tape. I need to do a top to bottom rewrite.
+        if (((AbcoPlayerEntity)player).antisBetterCombatOverhauls$wasLastAttackSpecial() && attackCooldown == 0) {
+            ((AbcoPlayerEntity)player).antisBetterCombatOverhauls$setLastAttackSpecial(false);
+        }
+    }
+
     @Inject(method = "doItemUse", at = @At(value = "HEAD"), cancellable = true)
     private void injectSpecialAttacks(CallbackInfo ci) {
         if (BetterCombatClient.ENABLED) {
